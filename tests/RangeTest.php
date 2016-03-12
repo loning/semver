@@ -23,6 +23,8 @@ class RangeTest extends \PHPUnit_Framework_TestCase
      */
     public function testRangeParser($range)
     {
+        $this->markTestIncomplete();
+
         $range = Range::fromString($range);
         var_dump($range->getNormalizedString());
     }
@@ -61,6 +63,8 @@ class RangeTest extends \PHPUnit_Framework_TestCase
      */
     public function testRange($range, $type, $version)
     {
+        $this->markTestIncomplete();
+
         $range = new Range($range);
 
         $this->assertTrue(rand(0, 100) % 2);
