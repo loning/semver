@@ -61,6 +61,14 @@ class Range
         return new self($range);
     }
 
+    /**
+     * @return string
+     */
+    public function getNormalizedString()
+    {
+        return implode('.', $this->elements);
+    }
+
     public function getOriginalString()
     {
         return $this->originalString;

@@ -71,15 +71,23 @@ class Version
 
     /**
      * @param Version $that Version to compare to.
-     *
      * @return int Negative is this is smaller, positive if that is smaller, or 0 if equals.
      */
     public function compare(Version $that)
     {
+        return $this->compareByVersion($that) ?: $this->compareByPrerelease($that);
+    }
+
+    /**
+     * @param Version $that
+     * @return int Negative is this is smaller, positive if that is smaller, or 0 if equals.
+     */
+    private function compareByVersion(Version $that)
+    {
         $thoseNumbers = count($that->version);
         $theseNumbers = count($this->version);
         if ($thoseNumbers < $theseNumbers) {
-            return -$that->compare($this);
+            return -$that->compareByVersion($this);
         }
         for ($idx = 0; $idx < $theseNumbers; ++$idx) {
             if ($this->version[$idx] != $that->version[$idx]) {
@@ -91,6 +99,15 @@ class Version
                 return 1;
             }
         }
+        return 0;
+    }
+
+    /**
+     * @param Version $that
+     * @return int Negative is this is smaller, positive if that is smaller, or 0 if equals.
+     */
+    private function compareByPrerelease(Version $that)
+    {
         if (!($leastPrereleases = min(count($this->prerelease), count($that->prerelease)))) {
             return count($that->prerelease) - count($this->prerelease);
         }
@@ -99,7 +116,6 @@ class Version
                 return strcmp($this->prerelease[$idx], $that->prerelease[$idx]);
             }
         }
-
         return count($this->prerelease) - count($that->prerelease);
     }
 

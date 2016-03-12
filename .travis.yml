@@ -8,6 +8,12 @@ matrix:
         - php: 5.6
         - php: 7
         - php: hhvm
+        - php: nightly
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: nightly
 
 before_script:
   - curl --version
