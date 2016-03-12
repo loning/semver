@@ -1,0 +1,31 @@
+{
+  "name": "omines/semver",
+  "type": "library",
+  "description": "SemVer 2.0.0 compliant semantic versioning tools, ranges, filters, sorters and collections",
+  "license": "MIT",
+  "keywords": [
+    "semver", "semantic", "versioning", "dictionary", "collection", "iterator", "constraints", "filters"
+  ],
+  "authors": [
+    {
+      "name": "Niels Keurentjes",
+      "email": "niels.keurentjes@omines.com",
+      "homepage": "https://www.omines.nl/"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/omines/semver/issues"
+  },
+  "require": {
+    "php": "^5.3.4 ^7"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8",
+    "satooshi/php-coveralls": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Omines\\Semver\\": "src/Semver/"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+    "1": [
+        "1",
+        {
+            "version": [
+                1,
+                0,
+                0
+            ],
+            "prerelease": [],
+            "build": []
+        }
+    ],
+    "1.0": [
+        "1.0",
+        {
+            "version": [
+                1,
+                0,
+                0
+            ],
+            "prerelease": [],
+            "build": []
+        }
+    ],
+    "1.0.0": [
+        "1.0.0",
+        {
+            "version": [
+                1,
+                0,
+                0
+            ],
+            "prerelease": [],
+            "build": []
+        }
+    ],
+    "1-alpha.1": [
+        "1-alpha.1",
+        {
+            "version": [
+                1,
+                0,
+                0
+            ],
+            "prerelease": [
+                "alpha",
+                1
+            ],
+            "build": []
+        }
+    ],
+    "1+build.2": [
+        "1+build.2",
+        {
+            "version": [
+                1,
+                0,
+                0
+            ],
+            "prerelease": [],
+            "build": [
+                "build",
+                2
+            ]
+        }
+    ],
+    "1-rc.3+build.3": [
+        "1-rc.3+build.3",
+        {
+            "version": [
+                1,
+                0,
+                0
+            ],
+            "prerelease": [
+                "rc",
+                3
+            ],
+            "build": [
+                "build",
+                3
+            ]
+        }
+    ]
+}
