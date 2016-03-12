@@ -8,6 +8,7 @@
  */
 
 namespace Omines\Semver\Tests;
+
 use Omines\Semver\Ranges\Range;
 
 /**
@@ -23,10 +24,7 @@ class RangeTest extends \PHPUnit_Framework_TestCase
      */
     public function testRangeParser($range)
     {
-        $this->markTestIncomplete();
-
         $range = Range::fromString($range);
-        var_dump($range->getNormalizedString());
     }
 
     public function variousRangesProvider()
@@ -51,25 +49,20 @@ class RangeTest extends \PHPUnit_Framework_TestCase
             '^1.2 | ~2.3 | ~3.4 | ^4.5',
             '^1.2 | ~2.3 | 3.4 - 3.5 | ^4.5',
         );
-        return array_combine($ranges, array_map(function($item) { return array($item); }, $ranges));
+        return array_combine($ranges, array_map(function ($item) { return array($item); }, $ranges));
     }
 
     /**
      * @dataProvider rangeDataProvider
      *
-     * @param string $range
+     * @param string $string
      * @param string $type
      * @param string $version
      */
-    public function testRange($range, $type, $version)
+    public function testRange($string, $type, $version)
     {
-        $this->assertTrue(Range::fromString('^5.3.0') instanceof Range);
-/*
-        $this->markTestIncomplete();
-
-        $range = new Range($range);
-
-        $this->assertTrue(rand(0, 100) % 2); */
+        $range = Range::fromString($string);
+        $this->assertEquals($string, $range->getOriginalString());
     }
 
     public function rangeDataProvider()

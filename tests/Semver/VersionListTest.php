@@ -27,11 +27,11 @@ class VersionListTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->sorted = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/IncrementalVersionsData.json'));
-        $this->random = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/ShuffledVersionsData.json'));
+        $this->sorted = json_decode(file_get_contents(__DIR__.'/Data/Semver2/IncrementalVersionsData.json'));
+        $this->random = json_decode(file_get_contents(__DIR__.'/Data/Semver2/ShuffledVersionsData.json'));
         $this->reverse = array_reverse($this->sorted);
 
-        $this->normalizedSorted = array_map(function($item) {
+        $this->normalizedSorted = array_map(function ($item) {
             return Version::fromString($item)->getNormalizedString();
         }, $this->sorted);
         $this->normalizedReverse = array_reverse($this->normalizedSorted);
@@ -51,13 +51,13 @@ class VersionListTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->normalizedReverse[3], $list[3]);
 
         // Iterable behaviours
-        foreach($list as $idx => $version) {
-            $this->assertEquals($this->normalizedReverse[$idx], (string)$version);
+        foreach ($list as $idx => $version) {
+            $this->assertEquals($this->normalizedReverse[$idx], (string) $version);
         }
 
         // Count/unset behaviours on arrays
         $this->assertEquals(count($this->sorted), count($list));
-        $sampleKey = (int)(count($this->sorted) / 2);
+        $sampleKey = (int) (count($this->sorted) / 2);
         $this->assertTrue(isset($list[$sampleKey]));
         unset($list[$sampleKey]);
         $this->assertFalse(isset($list[$sampleKey]));

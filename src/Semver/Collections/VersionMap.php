@@ -41,7 +41,7 @@ class VersionMap extends AbstractVersionCollection
      */
     public function getValues()
     {
-        return array_map(function($item) { return $item[1]; }, array_values($this->data));
+        return array_map(function ($item) { return $item[1]; }, array_values($this->data));
     }
 
     /**
@@ -49,7 +49,7 @@ class VersionMap extends AbstractVersionCollection
      */
     public function offsetExists($offset)
     {
-        return isset($this->data[(string)$offset]);
+        return isset($this->data[(string) $offset]);
     }
 
     /**
@@ -57,7 +57,7 @@ class VersionMap extends AbstractVersionCollection
      */
     public function offsetGet($offset)
     {
-        return $this->data[(string)$offset][1];
+        return $this->data[(string) $offset][1];
     }
 
     /**
@@ -67,7 +67,7 @@ class VersionMap extends AbstractVersionCollection
     public function offsetSet($offset, $value)
     {
         $version = ($offset instanceof Version ? $offset : Version::fromString($offset));
-        $this->data[(string)$offset] = [$version, $value];
+        $this->data[(string) $offset] = [$version, $value];
     }
 
     /**
@@ -75,6 +75,6 @@ class VersionMap extends AbstractVersionCollection
      */
     public function offsetUnset($offset)
     {
-        unset($this->data[(string)$offset]);
+        unset($this->data[(string) $offset]);
     }
 }

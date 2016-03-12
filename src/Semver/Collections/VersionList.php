@@ -79,23 +79,23 @@ class VersionList extends AbstractVersionCollection
     }
 
     /**
-     * Sorts the list to be descending according to Semver rules
+     * Sorts the list to be descending according to Semver rules.
      */
     public function rsort()
     {
-        usort($this->data, function($a, $b) {
-            /** @var Version[] $a */
+        usort($this->data, function ($a, $b) {
+            /* @var Version[] $a */
             return -($a[0]->compare($b[0]));
         });
     }
 
     /**
-     * Sorts the list to be ascending according to Semver rules
+     * Sorts the list to be ascending according to Semver rules.
      */
     public function sort()
     {
-        usort($this->data, function($a, $b) {
-            /** @var Version[] $a */
+        usort($this->data, function ($a, $b) {
+            /* @var Version[] $a */
             return $a[0]->compare($b[0]);
         });
     }

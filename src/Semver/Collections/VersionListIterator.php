@@ -8,6 +8,7 @@
  */
 
 namespace Omines\Semver\Collections;
+
 use Omines\Semver\Version;
 
 /**
