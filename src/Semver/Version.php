@@ -72,15 +72,17 @@ class Version
      */
     public function compare(Version $that)
     {
-        if (count($that->version) < count($this->version)) {
+        $thoseNumbers = count($that->version);
+        $theseNumbers = count($this->version);
+        if ($thoseNumbers < $theseNumbers) {
             return -$that->compare($this);
         }
-        for ($idx = 0; $idx < count($this->version); ++$idx) {
+        for ($idx = 0; $idx < $theseNumbers; ++$idx) {
             if ($this->version[$idx] != $that->version[$idx]) {
                 return $this->version[$idx] - $that->version[$idx];
             }
         }
-        for (; $idx < count($that->version); ++$idx) {
+        for (; $idx < $thoseNumbers; ++$idx) {
             if ($that->version[$idx]) {
                 return 1;
             }

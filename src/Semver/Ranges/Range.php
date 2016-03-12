@@ -19,11 +19,8 @@ class Range
     public function __construct($range)
     {
         $elements = preg_split('/\s*\|{1,2}\s*/', trim($range));
-        var_dump($elements);
         foreach ($elements as $element) {
             $subs = preg_split('/\s+/', $element);
-            var_dump($subs);
-
         }
     }
 
