@@ -16,11 +16,14 @@ namespace Omines\Semver\Ranges;
  */
 class Range
 {
+    private $elements;
+
     public function __construct($range)
     {
         $elements = preg_split('/\s*\|{1,2}\s*/', trim($range));
         foreach ($elements as $element) {
             $subs = preg_split('/\s+/', $element);
+            $this->elements[] = $subs;
         }
     }
 

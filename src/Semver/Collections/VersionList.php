@@ -27,6 +27,22 @@ class VersionList extends AbstractVersionCollection
     }
 
     /**
+     * @return string[] A standard PHP array of normalized versions.
+     */
+    public function getStringValues()
+    {
+        return $this->getVersionStringArray();
+    }
+
+    /**
+     * @return Version[] A standard PHP array of versions.
+     */
+    public function getValues()
+    {
+        return $this->getVersionArray();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function offsetExists($offset)
@@ -48,9 +64,9 @@ class VersionList extends AbstractVersionCollection
     public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
-            $this->data[] = array(Version::fromString($value));
+            $this->data[] = [Version::fromString($value)];
         } else {
-            $this->data[$offset] = array(Version::fromString($value));
+            $this->data[$offset] = [Version::fromString($value)];
         }
     }
 
@@ -82,21 +98,5 @@ class VersionList extends AbstractVersionCollection
             /** @var Version[] $a */
             return $a[0]->compare($b[0]);
         });
-    }
-
-    /**
-     * @return Version[] A standard PHP array of versions.
-     */
-    public function toArray()
-    {
-        return $this->getVersionArray();
-    }
-
-    /**
-     * @return string[] A standard PHP array of normalized versions.
-     */
-    public function toStringArray()
-    {
-        return $this->getVersionStringArray();
     }
 }

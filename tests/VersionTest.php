@@ -37,9 +37,11 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         // Test strings and numerics are handled correctly
         $this->assertSame('beta', $semver->getPrereleaseElement(0));
         $this->assertSame(1, $semver->getPrereleaseElement(1));
+        $this->assertNull($semver->getPrereleaseElement(2));
         $this->assertSame('build', $semver->getBuildElement(0));
         $this->assertSame(25122015, $semver->getBuildElement(1));
         $this->assertSame('ci', $semver->getBuildElement(2));
+        $this->assertNull($semver->getBuildElement(3));
     }
 
     public function testValidIncompleteSemverHandling()
@@ -75,7 +77,16 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(Version::fromString('1')->equals(Version::fromString('1.0.0+build')));
         $this->assertFalse(Version::fromString('1.2.3')->equals(Version::fromString('0.1.2')));
     }
-    
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Only Semver2 parsing is supported right now
+     */
+    public function testLooseParsingNotYetSupported()
+    {
+        Version::fromString('1.2.3', Version::COMPLIANCE_NONE);
+    }
+
     /**
      * @dataProvider comparisonProvider
      *

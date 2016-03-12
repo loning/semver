@@ -67,7 +67,7 @@ class VersionMap extends AbstractVersionCollection
     public function offsetSet($offset, $value)
     {
         $version = ($offset instanceof Version ? $offset : Version::fromString($offset));
-        $this->data[(string)$offset] = array($version, $value);
+        $this->data[(string)$offset] = [$version, $value];
     }
 
     /**

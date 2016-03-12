@@ -42,17 +42,17 @@ class Parser
         }
 
         // Parse prerelease and build parts
-        return array(
+        return [
             self::SECTION_VERSION => $numbers,
-            self::SECTION_PRERELEASE => isset($matches[3]) ?  self::splitSemver2Metadata($matches[3]) : array(),
-            self::SECTION_BUILD => isset($matches[5]) ? self::splitSemver2Metadata($matches[5]) : array(),
-        );
+            self::SECTION_PRERELEASE => isset($matches[3]) ?  self::splitSemver2Metadata($matches[3]) : [],
+            self::SECTION_BUILD => isset($matches[5]) ? self::splitSemver2Metadata($matches[5]) : [],
+        ];
     }
 
     private static function splitSemver2Metadata($metadata)
     {
         if (!isset($metadata) || 0 === strlen($metadata)) {
-            return array();
+            return [];
         }
 
         return array_map(function ($element) {

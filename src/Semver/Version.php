@@ -48,6 +48,10 @@ class Version
     {
         $this->originalString = $version;
 
+        if ($compliance != self::COMPLIANCE_SEMVER2) {
+            throw new \InvalidArgumentException('Only Semver2 parsing is supported right now');
+        }
+
         $parsed = Parser::parseSemver2($version);
         $this->version = $parsed[Parser::SECTION_VERSION];
         $this->prerelease = $parsed[Parser::SECTION_PRERELEASE];
