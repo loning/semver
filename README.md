@@ -9,11 +9,20 @@
 Semantic Versioning implementation for PHP including constraints, filters, sorting and iterable map. Conforms to Semver
 specification [2.0.0](http://semver.org/spec/v2.0.0.html) but also support loose parsing of non-compliant but similar versioning systems.
 
+## To-do
+
+This library is still being developed and not remotely feature complete.
+
+[] Port all unit tests from node's implementation to ensure identical operation
+[] Implement ranges
+[] Add stability support
+[] Add lossy parser for non-Semver compliant version strings
+[] Add filters for stability and ranges to iterators
+[] Add extra collection functionality for trimming by filters
+
 ## Contributions
 
 If you run into problems using this library, or would like to request additional features, please open an issue.
 
 Pull requests are only considered if they follow [PSR-2](http://www.php-fig.org/psr/psr-2/) coding standards and include
-full unit tests maintaining 100% coverage on files and lines.
-
-
+full unit tests maintaining coverage on files and lines.

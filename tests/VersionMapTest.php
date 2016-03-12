@@ -31,22 +31,31 @@ class VersionMapTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @depends clone testFillVersionMap
+     * @depends testFillVersionMap
+     *
+     * @param VersionMap $map
      */
-    public function testVersionMapMaintainOrder($map)
+    public function testVersionMapForeach($map)
     {
+        $sum = array_sum($map->getValues());
         $test = array();
+        $total = 0;
         foreach ($map as $key => $value) {
             $test[] = $value;
+            $total += $value;
         }
         $this->assertSame(array(1, 2, 3, 4, 5), $test);
+        $this->assertEquals($sum, $total);
     }
 
     /**
-     * @depends clone testFillVersionMap
+     * @depends testFillVersionMap
+     *
+     * @param VersionMap $map
      */
     public function testModifyingVersionMapElements($map)
     {
+        $map = clone $map;
         unset($map['0.2.2']);
         unset($map['6.8.4-123+456']);
         $map['3.4'] = 6;
@@ -60,11 +69,13 @@ class VersionMapTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testFillVersionMap
+     *
+     * @param VersionMap $map
      */
     public function testSerialization($map)
     {
         $string = serialize($map);
-        /** @var VersionMap $unserialized */
+        /** @param VersionMap $unserialized */
         $unserialized = unserialize($string);
 
         $this->assertCount(5, $unserialized);
