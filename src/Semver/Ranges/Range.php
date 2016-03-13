@@ -41,7 +41,7 @@ class Range
             if (preg_match('/^\s*([^\s]+)\s*\-\s*([^\s]+)\s*$/', $element, $parts)) {
                 $primitives = [
                     new Primitive(Version::fromString($parts[1]), Primitive::OPERATOR_LT, 1),
-                    new Primitive(Version::fromString($parts[2]), Primitive::OPERATOR_LT, 1),
+                    new Primitive(Version::fromString($parts[2]), Primitive::OPERATOR_GT, 1),
                 ];
             } else {
                 $primitives = [];
@@ -49,8 +49,40 @@ class Range
                     if (!preg_match('/^(\^|~|([><]?=?))(.+)$/', $simple, $parts)) {
                         throw new SemverException(sprintf('Could not parse simple constraint "%s"', $simple));
                     }
-                    echo($parts[1].' '.$parts[3]).PHP_EOL;
+                    $version = Version::fromString($parts[3]);
+                    switch ($parts[1] ?: '=') {
+                        case '>':
+                            $primitives[] = new Primitive($version, Primitive::OPERATOR_GT);
+                            break;
+                        case '<':
+                            $primitives[] = new Primitive($version, Primitive::OPERATOR_LT);
+                            break;
+                        case '>=':
+                            $primitives[] = new Primitive($version, Primitive::OPERATOR_LT, 1);
+                            break;
+                        case '<=':
+                            $primitives[] = new Primitive($version, Primitive::OPERATOR_GT, 1);
+                            break;
+                        case '=':
+                            $primitives[] = new Primitive($version, Primitive::OPERATOR_EQ);
+                            break;
+                        case '!=':
+                        case '<>':
+                            $primitives[] = new Primitive($version, Primitive::OPERATOR_EQ, 1);
+                            break;
+                        case '^':
+                            $primitives[] = new Primitive($version, Primitive::OPERATOR_LT, 1);
+                            $primitives[] = new Primitive($version->getNextSignificant(), Primitive::OPERATOR_LT);
+                            break;
+                        case '~':
+                            break;
+                        default:
+                            throw new \RuntimeException($parts[1]);
+                    }
                 }
+            }
+            if (empty($primitives)) {
+                throw new SemverException('Range part cannot be empty');
             }
             $this->elements[] = $primitives;
         }
@@ -66,7 +98,7 @@ class Range
      */
     public function getNormalizedString()
     {
-        return implode('.', $this->elements);
+        return implode(' || ', array_map(function($and) { return implode(' ', $and); }, $this->elements));
     }
 
     public function getOriginalString()

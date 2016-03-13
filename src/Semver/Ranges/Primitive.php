@@ -23,6 +23,12 @@ class Primitive
     const OPERATOR_GT = '>';
     const OPERATOR_LT = '<';
 
+    private static $inversions = [
+        self::OPERATOR_EQ => '!=',
+        self::OPERATOR_GT => '<=',
+        self::OPERATOR_LT => '>=',
+    ];
+
     /** @var Version */
     private $version;
 
@@ -51,5 +57,16 @@ class Primitive
                 return $this->negate === ($comparison < 0);
         }
         throw new SemverException(sprintf('Invalid primitive operator %d', $this->operator));
+    }
+
+    public function getNormalizedString()
+    {
+        $operator = $this->negate ? self::$inversions[$this->operator] : $this->operator;
+        return ($operator === '=' ? '' : $operator) . $this->version->getNormalizedString();
+    }
+
+    public function __toString()
+    {
+        return $this->getNormalizedString();
     }
 }

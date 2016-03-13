@@ -22,6 +22,10 @@ class Parser
     const SECTION_PRERELEASE = 'prerelease';
     const SECTION_BUILD = 'build';
 
+    /**
+     * @param string $version
+     * @return array[] Array of arrays containing the separate sections.
+     */
     public static function parseSemver2($version)
     {
         // Extract into separate parts
@@ -34,7 +38,6 @@ class Parser
             if (!ctype_digit($element)) {
                 throw new SemverException(sprintf('"%s" is not a valid version element', $element));
             }
-
             return (int) $element;
         }, explode('.', $matches[1])), 3, 0);
         if (count($numbers) > 3) {

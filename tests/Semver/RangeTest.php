@@ -20,16 +20,30 @@ class RangeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider variousRangesProvider
-     * @param string $range
+     * @param string $string
      */
-    public function testRangeParser($range)
+    public function testRangeParser($string)
     {
-        $range = Range::fromString($range);
+        if (preg_match('/[xX\*]/', $string)) {
+            $this->markTestIncomplete('X-matches not supported yet');
+        }
+        if (preg_match('/~/', $string)) {
+            $this->markTestIncomplete('Tilde not supported yet');
+        }
+
+        $range = Range::fromString($string);
+        echo sprintf("%s is %s", $string, $range) . PHP_EOL;
     }
 
     public function variousRangesProvider()
     {
         $ranges = array(
+            '^0.0.0',
+            '^0.0.1',
+            '^0.1.1',
+            '~0.0.0',
+            '~0.0.1',
+            '~0.1.1',
             '=1.2.3',
             '>2.3.4',
             '<3.4.5',

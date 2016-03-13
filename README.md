@@ -13,12 +13,12 @@ specification [2.0.0](http://semver.org/spec/v2.0.0.html) but also support loose
 
 This library is still being developed and not remotely feature complete.
 
-[] Port all unit tests from node's implementation to ensure identical operation
-[] Implement ranges
-[] Add stability support
-[] Add lossy parser for non-Semver compliant version strings
-[] Add filters for stability and ranges to iterators
-[] Add extra collection functionality for trimming by filters
+ * Port all unit tests from node's implementation to ensure identical operation
+ * Implement ranges - under construction
+ * Add stability support
+ * Add lossy parser for non-Semver compliant version strings
+ * Add filters for stability and ranges to iterators
+ * Add extra collection functionality for trimming by filters
 
 ## Contributions
 

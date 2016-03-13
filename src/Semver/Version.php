@@ -120,6 +120,28 @@ class Version
     }
 
     /**
+     * @return Version A new version representing the next significant release (caret operator)
+     */
+    public function getNextSignificant()
+    {
+        $next = clone $this;
+        $next->prerelease = [];
+        $max = count($this->version);
+        $index = 0;
+        do {
+            if ($this->version[$index]) {
+                ++$next->version[$index++];
+                while ($index < $max) {
+                    $next->version[$index++] = 0;
+                }
+                return $next;
+            }
+        } while(++$index < $max);
+        $next->version = [0,0,1];
+        return $next;
+    }
+
+    /**
      * @param Version $that
      * @return bool
      */
