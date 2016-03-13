@@ -35,7 +35,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function dataProvider()
     {
-        return json_decode(file_get_contents(__DIR__ . '/Data/Semver2/ParserTestData.json'), JSON_OBJECT_AS_ARRAY);
+        return json_decode(file_get_contents(__DIR__ . '/Data/Semver2/ParserTest.json'), JSON_OBJECT_AS_ARRAY);
     }
 
     /** @noinspection PhpUnusedPrivateMethodInspection */

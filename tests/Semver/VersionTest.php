@@ -109,7 +109,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
     public function comparisonProvider()
     {
         $data = [];
-        $versions = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/IncrementalVersionsData.json'), JSON_OBJECT_AS_ARRAY);
+        $versions = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/IncrementalVersions.json'), JSON_OBJECT_AS_ARRAY);
         for ($i = 0; $i < count($versions) - 1; ++$i) {
             $low = $versions[$i];
             $high = $versions[$i + 1];

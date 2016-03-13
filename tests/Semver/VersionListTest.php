@@ -28,8 +28,8 @@ class VersionListTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->sorted = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/IncrementalVersionsData.json'));
-        $this->random = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/ShuffledVersionsData.json'));
+        $this->sorted = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/IncrementalVersions.json'));
+        $this->random = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/ShuffledVersions.json'));
         $this->reverse = array_reverse($this->sorted);
 
         $this->normalizedSorted = array_map(function ($item) {

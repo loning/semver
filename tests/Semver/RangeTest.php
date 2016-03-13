@@ -86,7 +86,7 @@ class RangeTest extends \PHPUnit_Framework_TestCase
     public function rangeDataProvider()
     {
         $result = [];
-        $data = json_decode(file_get_contents(__DIR__ . '/Data/Ranges/RangeData.json'), JSON_OBJECT_AS_ARRAY);
+        $data = json_decode(file_get_contents(__DIR__ . '/Data/Ranges/RangeMatches.json'), JSON_OBJECT_AS_ARRAY);
         foreach ($data as $range => $tests) {
             foreach ($tests as $type => $versions) {
                 foreach ($versions as $version) {
@@ -95,5 +95,27 @@ class RangeTest extends \PHPUnit_Framework_TestCase
             }
         }
         return $result;
+    }
+
+    /**
+     * @dataProvider normalizedRangeDataProvider
+     *
+     * @param string $input
+     * @param string $expected
+     */
+    public function testRangeNormalization($input, $expected)
+    {
+        $this->markTestIncomplete('Not fully done');
+
+        $this->assertEquals($expected, Range::fromString($input)->getNormalizedString());
+    }
+
+    public function normalizedRangeDataProvider()
+    {
+        $data = json_decode(file_get_contents(__DIR__ . '/Data/Ranges/NormalizedRanges.json'), JSON_OBJECT_AS_ARRAY);
+        foreach ($data as $key => &$value) {
+            $value = [$key, $value];
+        }
+        return $data;
     }
 }

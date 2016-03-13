@@ -39,7 +39,7 @@ class Range
         $elements = preg_split('/\s*\|{1,2}\s*/', trim($range));
         foreach ($elements as $element) {
             // Detect hyphen
-            if (preg_match('/^\s*([^\s]+)\s*\-\s*([^\s]+)\s*$/', $element, $parts)) {
+            if (preg_match('/^\s*([^\s]+)\s+\-\s+([^\s]+)\s*$/', $element, $parts)) {
                 $primitives = [
                     new Primitive(Version::fromString($parts[1]), Primitive::OPERATOR_LT, true),
                     new Primitive(Version::fromString($parts[2]), Primitive::OPERATOR_GT, true),
@@ -47,10 +47,10 @@ class Range
             } else {
                 $primitives = [];
                 foreach (preg_split('/\s+/', $element) as $simple) {
-                    if (!preg_match('/^(\^|~|([><]?=?))(.+)$/', $simple, $parts)) {
+                    if (!preg_match('/^(\^|~|([><]?=?))(.*)$/', $simple, $parts)) {
                         throw new SemverException(sprintf('Could not parse simple constraint "%s"', $simple));
                     }
-                    $version = Version::fromString($parts[3]);
+                    $version = Version::fromString($parts[3] ?: '*');
                     switch ($parts[1] ?: '=') {
                         case '>':
                             $primitives[] = new Primitive($version, Primitive::OPERATOR_GT);
