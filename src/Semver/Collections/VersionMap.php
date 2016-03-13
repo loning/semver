@@ -1,7 +1,8 @@
 <?php
-/**
+
+/*
  * Semver
- * (c) Omines Internetbureau B.V.
+ * (c) Omines Internetbureau B.V. - www.omines.nl
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,11 +19,41 @@ use Omines\Semver\Version;
  */
 class VersionMap extends AbstractVersionCollection
 {
+    /**
+     * VersionMap constructor.
+     *
+     * @param array $data
+     */
+    public function __construct(array $data = [])
+    {
+        $this->data = array_combine(
+            array_keys($data),
+            array_map(function ($key, $value) {
+                return [Version::fromString($key), $value];
+            }, array_keys($data), array_values($data))
+        );
+    }
+
+    /**
+     * @param array $array
+     * @return VersionMap
+     */
+    public static function fromArray(array $array)
+    {
+        return new self($array);
+    }
+
+    /**
+     * @return Version[]
+     */
     public function getKeys()
     {
         return $this->getVersionArray();
     }
 
+    /**
+     * @return string[]
+     */
     public function getStringKeys()
     {
         return $this->getVersionStringArray();

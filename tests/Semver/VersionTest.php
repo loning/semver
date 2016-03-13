@@ -1,7 +1,8 @@
 <?php
-/**
+
+/*
  * Semver
- * (c) Omines Internetbureau B.V.
+ * (c) Omines Internetbureau B.V. - www.omines.nl
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -107,12 +108,12 @@ class VersionTest extends \PHPUnit_Framework_TestCase
 
     public function comparisonProvider()
     {
-        $data = array();
+        $data = [];
         $versions = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/IncrementalVersionsData.json'), JSON_OBJECT_AS_ARRAY);
         for ($i = 0; $i < count($versions) - 1; ++$i) {
             $low = $versions[$i];
             $high = $versions[$i + 1];
-            $data["$low < $high"] = array(Version::fromString($low), Version::fromString($high));
+            $data["$low < $high"] = [Version::fromString($low), Version::fromString($high)];
         }
 
         return $data;

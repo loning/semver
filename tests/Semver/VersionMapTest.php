@@ -1,7 +1,8 @@
 <?php
-/**
+
+/*
  * Semver
- * (c) Omines Internetbureau B.V.
+ * (c) Omines Internetbureau B.V. - www.omines.nl
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -38,13 +39,13 @@ class VersionMapTest extends \PHPUnit_Framework_TestCase
     public function testVersionMapForeach($map)
     {
         $sum = array_sum($map->getValues());
-        $test = array();
+        $test = [];
         $total = 0;
         foreach ($map as $key => $value) {
             $test[] = $value;
             $total += $value;
         }
-        $this->assertSame(array(1, 2, 3, 4, 5), $test);
+        $this->assertSame([1, 2, 3, 4, 5], $test);
         $this->assertEquals($sum, $total);
     }
 
@@ -60,11 +61,11 @@ class VersionMapTest extends \PHPUnit_Framework_TestCase
         unset($map['6.8.4-123+456']);
         $map['3.4'] = 6;
 
-        $test = array();
+        $test = [];
         foreach ($map as $key => $value) {
             $test[] = $value;
         }
-        $this->assertSame(array(1, 3, 4, 6), $test);
+        $this->assertSame([1, 3, 4, 6], $test);
     }
 
     /**
@@ -79,6 +80,6 @@ class VersionMapTest extends \PHPUnit_Framework_TestCase
         $unserialized = unserialize($string);
 
         $this->assertCount(5, $unserialized);
-        $this->assertSame(array(1, 2, 3, 4, 5), $unserialized->getValues());
+        $this->assertSame([1, 2, 3, 4, 5], $unserialized->getValues());
     }
 }

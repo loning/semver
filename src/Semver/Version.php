@@ -1,7 +1,8 @@
 <?php
-/**
+
+/*
  * Semver
- * (c) Omines Internetbureau B.V.
+ * (c) Omines Internetbureau B.V. - www.omines.nl
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -136,7 +137,7 @@ class Version
                 }
                 return $next;
             }
-        } while(++$index < $max);
+        } while (++$index < $max);
         $next->version = [0,0,1];
         return $next;
     }
@@ -235,10 +236,10 @@ class Version
     {
         $result = $this->getVersionNumber();
         if (!empty($this->prerelease)) {
-            $result .= '-'.implode('.', $this->prerelease);
+            $result .= '-' . implode('.', $this->prerelease);
         }
         if (!empty($this->build)) {
-            $result .= '+'.implode('.', $this->build);
+            $result .= '+' . implode('.', $this->build);
         }
 
         return $result;

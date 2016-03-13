@@ -1,7 +1,8 @@
 <?php
-/**
+
+/*
  * Semver
- * (c) Omines Internetbureau B.V.
+ * (c) Omines Internetbureau B.V. - www.omines.nl
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -98,7 +99,7 @@ class Range
      */
     public function getNormalizedString()
     {
-        return implode(' || ', array_map(function($and) { return implode(' ', $and); }, $this->elements));
+        return implode(' || ', array_map(function ($and) { return implode(' ', $and); }, $this->elements));
     }
 
     public function getOriginalString()

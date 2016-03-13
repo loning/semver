@@ -1,7 +1,8 @@
 <?php
-/**
+
+/*
  * Semver
- * (c) Omines Internetbureau B.V.
+ * (c) Omines Internetbureau B.V. - www.omines.nl
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -40,7 +41,7 @@ class RangeTest extends \PHPUnit_Framework_TestCase
 
     public function variousRangesProvider()
     {
-        $ranges = array(
+        $ranges = [
             '^0.0.0',
             '^0.0.1',
             '^0.1.1',
@@ -65,8 +66,8 @@ class RangeTest extends \PHPUnit_Framework_TestCase
             '1-2 | 4-5   ',
             '^1.2 | ~2.3 | ~3.4 | ^4.5',
             '^1.2 | ~2.3 | 3.4 - 3.5 | ^4.5',
-        );
-        return array_combine($ranges, array_map(function ($item) { return array($item); }, $ranges));
+        ];
+        return array_combine($ranges, array_map(function ($item) { return [$item]; }, $ranges));
     }
 
     /**
@@ -84,12 +85,12 @@ class RangeTest extends \PHPUnit_Framework_TestCase
 
     public function rangeDataProvider()
     {
-        $result = array();
-        $data = json_decode(file_get_contents(__DIR__.'/Data/Ranges/RangeData.json'), JSON_OBJECT_AS_ARRAY);
+        $result = [];
+        $data = json_decode(file_get_contents(__DIR__ . '/Data/Ranges/RangeData.json'), JSON_OBJECT_AS_ARRAY);
         foreach ($data as $range => $tests) {
             foreach ($tests as $type => $versions) {
                 foreach ($versions as $version) {
-                    $result["$range $type $version"] = array($range, $type, $version);
+                    $result["$range $type $version"] = [$range, $type, $version];
                 }
             }
         }

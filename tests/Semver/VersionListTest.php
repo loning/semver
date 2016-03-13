@@ -1,7 +1,8 @@
 <?php
-/**
+
+/*
  * Semver
- * (c) Omines Internetbureau B.V.
+ * (c) Omines Internetbureau B.V. - www.omines.nl
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -27,8 +28,8 @@ class VersionListTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->sorted = json_decode(file_get_contents(__DIR__.'/Data/Semver2/IncrementalVersionsData.json'));
-        $this->random = json_decode(file_get_contents(__DIR__.'/Data/Semver2/ShuffledVersionsData.json'));
+        $this->sorted = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/IncrementalVersionsData.json'));
+        $this->random = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/ShuffledVersionsData.json'));
         $this->reverse = array_reverse($this->sorted);
 
         $this->normalizedSorted = array_map(function ($item) {
@@ -71,14 +72,12 @@ class VersionListTest extends \PHPUnit_Framework_TestCase
 
     public function testVersionListArrayAccessors()
     {
-        $this->markTestIncomplete('Working on it');
-
         $list = VersionList::fromArray($this->sorted);
-        $first = $list->toStringArray();
-        $second = $list->toArray();
+        $first = $list->getStringValues();
+        $second = $list->getValues();
 
         foreach ($second as &$item) {
-            $item = $item->toNormalizedString();
+            $item = $item->getNormalizedString();
         }
         $this->assertSame($first, $second);
     }

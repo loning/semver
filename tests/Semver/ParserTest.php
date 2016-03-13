@@ -1,7 +1,8 @@
 <?php
-/**
+
+/*
  * Semver
- * (c) Omines Internetbureau B.V.
+ * (c) Omines Internetbureau B.V. - www.omines.nl
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -34,17 +35,17 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function dataProvider()
     {
-        return json_decode(file_get_contents(__DIR__.'/Data/Semver2/ParserTestData.json'), JSON_OBJECT_AS_ARRAY);
+        return json_decode(file_get_contents(__DIR__ . '/Data/Semver2/ParserTestData.json'), JSON_OBJECT_AS_ARRAY);
     }
 
     /** @noinspection PhpUnusedPrivateMethodInspection */
     private function generateData()
     {
-        $output = array();
-        foreach (array('1', '1.0', '1.0.0', '1-alpha.1', '1+build.2', '1-rc.3+build.3') as $sample) {
-            $output[$sample] = array($sample, Parser::parseSemver2($sample));
+        $output = [];
+        foreach (['1', '1.0', '1.0.0', '1-alpha.1', '1+build.2', '1-rc.3+build.3'] as $sample) {
+            $output[$sample] = [$sample, Parser::parseSemver2($sample)];
         }
-        file_put_contents(__DIR__.'/Data/ParserTestData.json', json_encode($output, JSON_PRETTY_PRINT));
+        file_put_contents(__DIR__ . '/Data/ParserTestData.json', json_encode($output, JSON_PRETTY_PRINT));
     }
 
     /**
