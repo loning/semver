@@ -10,6 +10,7 @@
 namespace Omines\Semver\Tests;
 
 use Omines\Semver\Ranges\Range;
+use Omines\Semver\Version;
 
 /**
  * RangeTest
@@ -32,7 +33,9 @@ class RangeTest extends \PHPUnit_Framework_TestCase
         }
 
         $range = Range::fromString($string);
-        echo sprintf("%s is %s", $string, $range) . PHP_EOL;
+        $version = Version::fromString('6.8.4-alpha');
+        $satisfied = $range->matches($version) ? 'matches' : 'does not match';
+        echo sprintf("%s is %s %s", $string, $range, $satisfied) . PHP_EOL;
     }
 
     public function variousRangesProvider()

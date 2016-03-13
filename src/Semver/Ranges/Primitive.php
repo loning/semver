@@ -45,12 +45,12 @@ class Primitive
         $this->negate = (bool) $negate;
     }
 
-    public function satisfy(Version $version)
+    public function matches(Version $version)
     {
         $comparison = $this->version->compare($version);
         switch ($this->operator) {
             case self::OPERATOR_EQ:
-                return !$comparison === $this->negate;
+                return !!$comparison === $this->negate;
             case self::OPERATOR_GT:
                 return $this->negate === ($comparison > 0);
             case self::OPERATOR_LT:

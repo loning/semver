@@ -40,8 +40,8 @@ class Range
             // Detect hyphen
             if (preg_match('/^\s*([^\s]+)\s*\-\s*([^\s]+)\s*$/', $element, $parts)) {
                 $primitives = [
-                    new Primitive(Version::fromString($parts[1]), Primitive::OPERATOR_LT, 1),
-                    new Primitive(Version::fromString($parts[2]), Primitive::OPERATOR_GT, 1),
+                    new Primitive(Version::fromString($parts[1]), Primitive::OPERATOR_LT, true),
+                    new Primitive(Version::fromString($parts[2]), Primitive::OPERATOR_GT, true),
                 ];
             } else {
                 $primitives = [];
@@ -58,20 +58,20 @@ class Range
                             $primitives[] = new Primitive($version, Primitive::OPERATOR_LT);
                             break;
                         case '>=':
-                            $primitives[] = new Primitive($version, Primitive::OPERATOR_LT, 1);
+                            $primitives[] = new Primitive($version, Primitive::OPERATOR_LT, true);
                             break;
                         case '<=':
-                            $primitives[] = new Primitive($version, Primitive::OPERATOR_GT, 1);
+                            $primitives[] = new Primitive($version, Primitive::OPERATOR_GT, true);
                             break;
                         case '=':
                             $primitives[] = new Primitive($version, Primitive::OPERATOR_EQ);
                             break;
                         case '!=':
                         case '<>':
-                            $primitives[] = new Primitive($version, Primitive::OPERATOR_EQ, 1);
+                            $primitives[] = new Primitive($version, Primitive::OPERATOR_EQ, true);
                             break;
                         case '^':
-                            $primitives[] = new Primitive($version, Primitive::OPERATOR_LT, 1);
+                            $primitives[] = new Primitive($version, Primitive::OPERATOR_LT, true);
                             $primitives[] = new Primitive($version->getNextSignificant(), Primitive::OPERATOR_LT);
                             break;
                         case '~':
@@ -104,6 +104,19 @@ class Range
     public function getOriginalString()
     {
         return $this->originalString;
+    }
+
+    public function matches(Version $version)
+    {
+        foreach ($this->elements as $or) {
+            foreach ($or as $and) {
+                if (!$and->matches($version)) {
+                    continue 2;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public function __toString()
