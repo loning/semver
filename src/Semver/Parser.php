@@ -155,10 +155,7 @@ class Parser
             case '!=':
             case '<>':
                 if ($wildcard) {
-                    return [
-                        new Primitive($version, Primitive::OPERATOR_LT),
-                        new Primitive($upper, Primitive::OPERATOR_GT),
-                    ];
+                    throw new SemverException('Inequality operator requires exact version');
                 }
                 return [new Primitive($version, Primitive::OPERATOR_EQ, true)];
             case '^':
@@ -179,10 +176,9 @@ class Parser
                     new Primitive($version, Primitive::OPERATOR_LT, true),
                     new Primitive($upper, Primitive::OPERATOR_LT),
                 ];
-            // @codeCoverageIgnoreStart
-            default:
-                throw new SemverException('Unexpected operator ' . $parts[1]);
-            // @codeCoverageIgnoreEnd
         }
+        // @codeCoverageIgnoreStart
+        throw new SemverException('Unexpected operator ' . $parts[1]);
+        // @codeCoverageIgnoreEnd
     }
 }

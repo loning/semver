@@ -81,13 +81,9 @@ class Version
     public static function highest($versions)
     {
         $versions = is_array($versions) ? $versions : func_get_args();
-        $result = array_shift($versions);
-        foreach ($versions as $version) {
-            if ($version->compare($result) > 0) {
-                $result = $version;
-            }
-        }
-        return $result;
+        return array_reduce($versions, function (Version $carry, $version) {
+            return ($carry->compare($version) > 0 ? $carry : $version);
+        }, array_shift($versions));
     }
 
     /**
@@ -100,13 +96,9 @@ class Version
     public static function lowest($versions)
     {
         $versions = is_array($versions) ? $versions : func_get_args();
-        $result = array_shift($versions);
-        foreach ($versions as $version) {
-            if ($version->compare($result) < 0) {
-                $result = $version;
-            }
-        }
-        return $result;
+        return array_reduce($versions, function (Version $carry, $version) {
+            return ($carry->compare($version) < 0 ? $carry : $version);
+        }, array_shift($versions));
     }
 
     /**

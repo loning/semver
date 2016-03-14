@@ -83,4 +83,13 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         Parser::parseRange('aap || noot || mies');
     }
+
+    /**
+     * @expectedException \Omines\Semver\Exception\SemverException
+     * @expectedExceptionMessage Inequality operator requires exact version
+     */
+    public function testInvalidInequalityException()
+    {
+        Parser::parseRange('!=1.x');
+    }
 }
