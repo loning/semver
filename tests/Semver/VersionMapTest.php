@@ -19,16 +19,42 @@ use Omines\Semver\Collections\VersionMap;
  */
 class VersionMapTest extends \PHPUnit_Framework_TestCase
 {
+    private static $sampleVersions = [
+        '1.2',
+        '0.2.2',
+        '23.0.0-test',
+        '2.3.4+build.684',
+        '6.8.4-123+456',
+    ];
+
     public function testFillVersionMap()
     {
         $map = new VersionMap();
-        $map['1.2'] = 1;
-        $map['0.2.2'] = 2;
-        $map['23.0.0-test'] = 3;
-        $map['2.3.4+build.684'] = 4;
-        $map['6.8.4-123+456'] = 5;
+        $i = 0;
+        foreach (self::$sampleVersions as $version) {
+            $map[$version] = ++$i;
+        }
         $this->assertCount(5, $map);
         return $map;
+    }
+
+    /**
+     * @depends testFillVersionMap
+     *
+     * @param VersionMap $global
+     */
+    public function testArrayFunctions($global)
+    {
+        $map = VersionMap::fromArray(array_combine(
+            self::$sampleVersions,
+            [1, 2, 3, 4, 5]
+        ));
+        $this->assertSame(self::$sampleVersions, array_keys($map->getStringKeys()));
+        $this->assertEquals($global->getKeys(), $map->getKeys());
+        $this->assertSame($global->getValues(), $map->getValues());
+
+        $this->assertTrue(isset($map[self::$sampleVersions[2]]));
+        $this->assertEquals(3, $map[self::$sampleVersions[2]]);
     }
 
     /**
