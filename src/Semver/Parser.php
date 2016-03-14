@@ -92,10 +92,14 @@ class Parser
     {
         // Detect hyphen
         if (preg_match(self::REGEX_HYPHEN, $range, $parts)) {
-            return [
-                new Primitive(Version::fromString($parts[1]), Primitive::OPERATOR_LT, true),
-                new Primitive(Version::fromString($parts[2]), Primitive::OPERATOR_GT, true),
-            ];
+            $nrs = explode('.', $parts[2]);
+            if (count($nrs) < 3) {
+                ++$nrs[count($nrs) - 1];
+                $ubound = new Primitive(implode('.', $nrs), Primitive::OPERATOR_LT);
+            } else {
+                $ubound = new Primitive($parts[2], Primitive::OPERATOR_GT, true);
+            }
+            return [ new Primitive($parts[1], Primitive::OPERATOR_LT, true), $ubound ];
         }
 
         // Split regular simple constraints
@@ -112,18 +116,20 @@ class Parser
      */
     public static function parseSimpleRange($simple)
     {
-        if ($simple == '^0.0.x') {
+        if ($simple == '~0') {
             var_dump('ohai');
         }
         if (!preg_match(self::REGEX_RANGE, $simple ?: '*', $parts)) {
             throw new SemverException(sprintf('Could not parse simple constraint "%s"', $simple));
         }
-        $partial = str_replace(['*', 'x', 'X'], '*', $parts[3] ?: '*');
+        $partial = str_replace(['*', 'x', 'X'], '*', $parts[3]);
         $qualifier = count($parts) > 4 ? $parts[4] : '';
         if (0 === ($wildcard = array_search('*', $xrs = explode('.', $partial)))) {
             return [new Primitive(Version::fromString('0'), Primitive::OPERATOR_LT, true)];
         } elseif ($wildcard) {
             $xrs = array_slice($xrs, 0, $wildcard);
+        } elseif (count($xrs) < 3) {
+            $wildcard = count($xrs);
         }
         $low = $high = array_pad($xrs, 3, 0);
         if ($wildcard) {
@@ -142,9 +148,21 @@ class Parser
             case '<=':
                 return [new Primitive($version, Primitive::OPERATOR_GT, true)];
             case '=':
+                if ($wildcard) {
+                    return [
+                        new Primitive($version, Primitive::OPERATOR_LT, true),
+                        new Primitive($upper, Primitive::OPERATOR_LT),
+                    ];
+                }
                 return [new Primitive($version, Primitive::OPERATOR_EQ)];
             case '!=':
             case '<>':
+                if ($wildcard) {
+                    return [
+                        new Primitive($version, Primitive::OPERATOR_LT),
+                        new Primitive($upper, Primitive::OPERATOR_GT),
+                    ];
+                }
                 return [new Primitive($version, Primitive::OPERATOR_EQ, true)];
             case '^':
                 $version = Version::fromString($version);
@@ -154,7 +172,16 @@ class Parser
                     new Primitive($upper, Primitive::OPERATOR_LT),
                 ];
             case '~':
-                return [];
+                if (count($xrs) == 1) {
+                    $upper = Version::fromString($xrs[0]+1);
+                } else {
+                    ++$xrs[1];
+                    $upper = Version::fromString(implode('.', array_slice($xrs, 0, 2)));
+                }
+                return [
+                    new Primitive($version, Primitive::OPERATOR_LT, true),
+                    new Primitive($upper, Primitive::OPERATOR_LT),
+                ];
             default:
                 throw new \RuntimeException($parts[1]);
         }
