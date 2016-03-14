@@ -69,12 +69,21 @@ class RangeTest extends \PHPUnit_Framework_TestCase
      *
      * @param string $string
      * @param string $type
-     * @param string $version
+     * @param Version $version
      */
     public function testRange($string, $type, $version)
     {
         $range = Range::fromString($string);
-        $this->assertEquals($string, $range->getOriginalString());
+        switch ($type) {
+            case 'match':
+                $this->assertTrue($range->satisfiedBy($version));
+                break;
+            case 'fail':
+                $this->assertFalse($range->satisfiedBy($version));
+                break;
+            default:
+                // TODO: Implement lt/gt
+        }
     }
 
     public function rangeDataProvider()
@@ -84,7 +93,7 @@ class RangeTest extends \PHPUnit_Framework_TestCase
         foreach ($data as $range => $tests) {
             foreach ($tests as $type => $versions) {
                 foreach ($versions as $version) {
-                    $result["$range $type $version"] = [$range, $type, $version];
+                    $result["$range $type $version"] = [$range, $type, Version::fromString($version)];
                 }
             }
         }

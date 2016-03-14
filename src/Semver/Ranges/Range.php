@@ -37,6 +37,10 @@ class Range
         $this->elements = Parser::parseRangeSet($range);
     }
 
+    /**
+     * @param $range
+     * @return Range
+     */
     public static function fromString($range)
     {
         return new self($range);
@@ -50,11 +54,18 @@ class Range
         return implode(' || ', array_map(function ($and) { return implode(' ', $and); }, $this->elements));
     }
 
+    /**
+     * @return string
+     */
     public function getOriginalString()
     {
         return $this->originalString;
     }
 
+    /**
+     * @param Version $version
+     * @return bool Whether the version is within this range.
+     */
     public function satisfiedBy(Version $version)
     {
         foreach ($this->elements as $or) {
@@ -68,6 +79,9 @@ class Range
         return false;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getNormalizedString();

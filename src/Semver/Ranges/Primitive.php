@@ -60,10 +60,10 @@ class Primitive
     public function satisfiedBy($version)
     {
         $version = $version instanceof Version ? $version : Version::fromString($version);
-        $comparison = $this->version->compare($version);
+        $comparison = $version->compare($this->version);
         switch ($this->operator) {
             case self::OPERATOR_EQ:
-                $result = (bool) $comparison;
+                $result = !$comparison;
                 break;
             case self::OPERATOR_GT:
                 $result = ($comparison > 0);
@@ -74,13 +74,13 @@ class Primitive
             default:
                 throw new SemverException(sprintf('Invalid primitive operator "%s"', $this->operator));
         }
-        return $this->negate === $result;
+        return $this->negate ^ $result;
     }
 
     public function getNormalizedString()
     {
         $operator = $this->negate ? self::$inversions[$this->operator] : $this->operator;
-        return ($operator === '=' ? '' : $operator) . $this->version->getNormalizedString();
+        return ($operator === self::OPERATOR_EQ ? '' : $operator) . $this->version->getNormalizedString();
     }
 
     public function __toString()
