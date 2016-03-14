@@ -73,14 +73,13 @@ class Version
     /**
      * Returns the greatest version of the supplied arguments.
      *
-     * @param Version $first
-     * @param Version $second
+     * @param Version $version
      * @param Version ...
      * @return Version
      */
-    public static function greatest(Version $first, Version $second)
+    public static function greatest(Version $version)
     {
-        $result = $first;
+        $result = $version;
         /** @var Version $version */
         foreach (array_slice(func_get_args(), 1) as $version) {
             if ($version->compare($result) > 0) {

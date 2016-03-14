@@ -10,7 +10,6 @@
 
 namespace Omines\Semver\Ranges;
 
-use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Parser;
 use Omines\Semver\Version;
 

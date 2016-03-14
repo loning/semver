@@ -116,9 +116,6 @@ class Parser
      */
     public static function parseSimpleRange($simple)
     {
-        if ($simple == '~0') {
-            var_dump('ohai');
-        }
         if (!preg_match(self::REGEX_RANGE, $simple ?: '*', $parts)) {
             throw new SemverException(sprintf('Could not parse simple constraint "%s"', $simple));
         }
