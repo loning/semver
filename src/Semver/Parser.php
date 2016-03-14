@@ -163,7 +163,7 @@ class Parser
                 return [new Primitive($version, Primitive::OPERATOR_EQ, true)];
             case '^':
                 $version = Version::fromString($version);
-                $upper = Version::greatest($version->getNextSignificant(), Version::fromString($upper));
+                $upper = Version::highest($version->getNextSignificant(), Version::fromString($upper));
                 return [
                     new Primitive($version, Primitive::OPERATOR_LT, true),
                     new Primitive($upper, Primitive::OPERATOR_LT),

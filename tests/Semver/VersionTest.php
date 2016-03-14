@@ -88,6 +88,22 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         Version::fromString('1.2.3', Version::COMPLIANCE_NONE);
     }
 
+    public function testSemverIgnoresBuildData()
+    {
+        $this->assertSame(0, Version::fromString('1+build')->compare(Version::fromString('1+later')));
+        $this->assertSame(0, Version::fromString('1+build.1.2.3')->compare(Version::fromString('1+build')));
+    }
+
+    public function testHighestLowest()
+    {
+        $versions = array_map([Version::class, 'fromString'], ['0.1.2', '1.2.3', '2.3.4', '3.4.5', '4.5.6']);
+        $this->assertEquals('0.1.2', Version::lowest($versions)->getOriginalString());
+        $this->assertEquals('4.5.6', Version::highest($versions)->getOriginalString());
+        shuffle($versions);
+        $this->assertEquals('0.1.2', Version::lowest($versions)->getOriginalString());
+        $this->assertEquals('4.5.6', Version::highest($versions)->getOriginalString());
+    }
+
     /**
      * @dataProvider comparisonProvider
      *
@@ -98,12 +114,6 @@ class VersionTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertLessThan(0, $low->compare($high));
         $this->assertGreaterThan(0, $high->compare($low));
-    }
-
-    public function testSemverIgnoresBuildData()
-    {
-        $this->assertSame(0, Version::fromString('1+build')->compare(Version::fromString('1+later')));
-        $this->assertSame(0, Version::fromString('1+build.1.2.3')->compare(Version::fromString('1+build')));
     }
 
     public function comparisonProvider()

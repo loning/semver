@@ -53,8 +53,13 @@ class Primitive
         $this->negate = (bool) $negate;
     }
 
-    public function matches(Version $version)
+    /**
+     * @param Version|string $version
+     * @return bool
+     */
+    public function satisfiedBy($version)
     {
+        $version = $version instanceof Version ? $version : Version::fromString($version);
         $comparison = $this->version->compare($version);
         switch ($this->operator) {
             case self::OPERATOR_EQ:
@@ -64,7 +69,7 @@ class Primitive
             case self::OPERATOR_LT:
                 return $this->negate === ($comparison < 0);
         }
-        throw new SemverException(sprintf('Invalid primitive operator %d', $this->operator));
+        throw new SemverException(sprintf('Invalid primitive operator "%s"', $this->operator));
     }
 
     public function getNormalizedString()

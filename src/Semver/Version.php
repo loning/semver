@@ -9,6 +9,7 @@
  */
 
 namespace Omines\Semver;
+use Omines\Semver\Ranges\Range;
 
 /**
  * Semver Version number encapsulation.
@@ -71,18 +72,37 @@ class Version
     }
 
     /**
-     * Returns the greatest version of the supplied arguments.
+     * Returns the greatest version of the supplied arguments or array.
      *
-     * @param Version $version
+     * @param Version|Version[] $versions
      * @param Version ...
      * @return Version
      */
-    public static function greatest(Version $version)
+    public static function highest($versions)
     {
-        $result = $version;
-        /** @var Version $version */
-        foreach (array_slice(func_get_args(), 1) as $version) {
+        $versions = is_array($versions) ? $versions : func_get_args();
+        $result = array_shift($versions);
+        foreach ($versions as $version) {
             if ($version->compare($result) > 0) {
+                $result = $version;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Returns the lowest version of the supplied arguments or array.
+     *
+     * @param Version|Version[] $versions
+     * @param Version ...
+     * @return Version
+     */
+    public static function lowest($versions)
+    {
+        $versions = is_array($versions) ? $versions : func_get_args();
+        $result = array_shift($versions);
+        foreach ($versions as $version) {
+            if ($version->compare($result) < 0) {
                 $result = $version;
             }
         }
@@ -165,6 +185,15 @@ class Version
      * @param Version $that
      * @return bool
      */
+    public function equals(Version $that)
+    {
+        return $this->compare($that) === 0;
+    }
+
+    /**
+     * @param Version $that
+     * @return bool
+     */
     public function greaterThan(Version $that)
     {
         return $this->compare($that) > 0;
@@ -183,15 +212,6 @@ class Version
      * @param Version $that
      * @return bool
      */
-    public function equals(Version $that)
-    {
-        return $this->compare($that) === 0;
-    }
-
-    /**
-     * @param Version $that
-     * @return bool
-     */
     public function lessThan(Version $that)
     {
         return $this->compare($that) < 0;
@@ -204,6 +224,15 @@ class Version
     public function lessThanOrEqual(Version $that)
     {
         return $this->compare($that) <= 0;
+    }
+
+    /**
+     * @param Range $range
+     * @return bool
+     */
+    public function satisfies(Range $range)
+    {
+        return $range->satisfiedBy($this);
     }
 
     /**

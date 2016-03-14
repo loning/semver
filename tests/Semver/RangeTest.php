@@ -28,7 +28,7 @@ class RangeTest extends \PHPUnit_Framework_TestCase
     {
         $range = Range::fromString($string);
         $version = Version::fromString('6.8.4-alpha');
-        $satisfied = $range->matches($version) ? 'matches' : 'does not match';
+        $satisfied = $range->satisfiedBy($version) ? 'matches' : 'does not match';
         $satisfied = $satisfied . '.';
     }
 

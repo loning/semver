@@ -55,11 +55,11 @@ class Range
         return $this->originalString;
     }
 
-    public function matches(Version $version)
+    public function satisfiedBy(Version $version)
     {
         foreach ($this->elements as $or) {
             foreach ($or as $and) {
-                if (!$and->matches($version)) {
+                if (!$and->satisfiedBy($version)) {
                     continue 2;
                 }
             }
