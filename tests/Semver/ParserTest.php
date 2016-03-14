@@ -74,4 +74,13 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         Parser::parseSemver2('1.2.3.4');
     }
+
+    /**
+     * @expectedException \Omines\Semver\Exception\SemverException
+     * @expectedExceptionMessage Could not parse simple constraint
+     */
+    public function testBrokenRangeException()
+    {
+        Parser::parseRange('aap || noot || mies');
+    }
 }

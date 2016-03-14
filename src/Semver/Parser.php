@@ -25,7 +25,7 @@ class Parser
     const SECTION_BUILD = 'build';
 
     const REGEX_HYPHEN = '#^\s*([^\s]+)\s+\-\s+([^\s]+)\s*$#';
-    const REGEX_RANGE = '#^\s*(\^|~|([><]?=?))([\dxX\*\.]+)(\-([a-z0-9\.\-]+))?\s*$#i';
+    const REGEX_RANGE = '#^\s*(\^|~|!=|<>|([><]?=?))([\dxX\*\.]+)(\-([a-z0-9\.\-]+))?\s*$#i';
     const REGEX_SEMVER2 = '#^[=v\s]*([\d\.]+)(\-([a-z0-9\.\-]+))?(\+([a-z0-9\.]+))?\s*$#i';
     const REGEX_SPLIT_RANGESET = '#\s*\|{1,2}\s*#';
 
@@ -180,7 +180,7 @@ class Parser
                     new Primitive($upper, Primitive::OPERATOR_LT),
                 ];
             default:
-                throw new \RuntimeException($parts[1]);
+                throw new SemverException('Unexpected operator ' . $parts[1]);
         }
     }
 }
