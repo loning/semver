@@ -28,8 +28,7 @@ class RangeTest extends \PHPUnit_Framework_TestCase
     {
         $range = Range::fromString($string);
         $version = Version::fromString('6.8.4-alpha');
-        $satisfied = $range->satisfiedBy($version) ? 'matches' : 'does not match';
-        $satisfied = $satisfied . '.';
+        $this->assertEquals($range->satisfiedBy($version), $version->satisfies($range));
     }
 
     public function variousRangesProvider()
@@ -44,6 +43,8 @@ class RangeTest extends \PHPUnit_Framework_TestCase
             '=1.2.3',
             '>2.3.4',
             '<3.4.5',
+            '!=4.5.6',
+            '<>5.6.7',
             '>=4.5.6',
             '<=5.6.7',
             '~6.7.8',
@@ -98,7 +99,7 @@ class RangeTest extends \PHPUnit_Framework_TestCase
      */
     public function testRangeNormalization($input, $expected)
     {
-        $this->assertEquals($expected, Range::fromString($input)->getNormalizedString());
+        $this->assertEquals($expected, Range::fromString($input));
     }
 
     public function normalizedRangeDataProvider()

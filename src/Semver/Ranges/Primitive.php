@@ -33,7 +33,7 @@ class Primitive
     /** @var Version */
     private $version;
 
-    /** @var int */
+    /** @var string */
     private $operator;
 
     /** @var bool  */
