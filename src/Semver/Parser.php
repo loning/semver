@@ -176,8 +176,8 @@ class Parser
                     new Primitive($version, Primitive::OPERATOR_LT, true),
                     new Primitive($upper, Primitive::OPERATOR_LT),
                 ];
-        }
         // @codeCoverageIgnoreStart
+        }
         throw new SemverException('Unexpected operator ' . $parts[1]);
         // @codeCoverageIgnoreEnd
     }

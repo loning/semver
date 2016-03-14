@@ -9,6 +9,7 @@
  */
 
 namespace Omines\Semver;
+
 use Omines\Semver\Ranges\Range;
 
 /**
