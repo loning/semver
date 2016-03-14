@@ -26,13 +26,6 @@ class RangeTest extends \PHPUnit_Framework_TestCase
      */
     public function testRangeParser($string)
     {
-        if (preg_match('/[xX\*]/', $string)) {
-            $this->markTestIncomplete('X-matches not supported yet');
-        }
-        if (preg_match('/~/', $string)) {
-            $this->markTestIncomplete('Tilde not supported yet');
-        }
-
         $range = Range::fromString($string);
         $version = Version::fromString('6.8.4-alpha');
         $satisfied = $range->matches($version) ? 'matches' : 'does not match';
@@ -63,7 +56,7 @@ class RangeTest extends \PHPUnit_Framework_TestCase
             '*',
             '1.2.3|2.3.4',
             ' 1.2.3 || 2.3.4',
-            '1-2 | 4-5   ',
+            '1 - 2 | 4 - 5   ',
             '^1.2 | ~2.3 | ~3.4 | ^4.5',
             '^1.2 | ~2.3 | 3.4 - 3.5 | ^4.5',
         ];
@@ -105,8 +98,6 @@ class RangeTest extends \PHPUnit_Framework_TestCase
      */
     public function testRangeNormalization($input, $expected)
     {
-        $this->markTestIncomplete('Not fully done');
-
         $this->assertEquals($expected, Range::fromString($input)->getNormalizedString());
     }
 

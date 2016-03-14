@@ -39,9 +39,16 @@ class Primitive
     /** @var bool  */
     private $negate;
 
-    public function __construct(Version $version, $operator, $negate = false)
+    /**
+     * Primitive constructor.
+     *
+     * @param string|Version $version
+     * @param string $operator
+     * @param bool $negate
+     */
+    public function __construct($version, $operator, $negate = false)
     {
-        $this->version = $version;
+        $this->version = $version instanceof Version ? $version : Version::fromString($version);
         $this->operator = $operator;
         $this->negate = (bool) $negate;
     }

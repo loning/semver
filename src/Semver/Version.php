@@ -71,6 +71,26 @@ class Version
     }
 
     /**
+     * Returns the greatest version of the supplied arguments.
+     *
+     * @param Version $first
+     * @param Version $second
+     * @param Version ...
+     * @return Version
+     */
+    public static function greatest(Version $first, Version $second)
+    {
+        $result = $first;
+        /** @var Version $version */
+        foreach (array_slice(func_get_args(), 1) as $version) {
+            if ($version->compare($result) > 0) {
+                $result = $version;
+            }
+        }
+        return $result;
+    }
+
+    /**
      * @param Version $that Version to compare to.
      * @return int Negative is this is smaller, positive if that is smaller, or 0 if equals.
      */

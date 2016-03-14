@@ -11,6 +11,7 @@
 namespace Omines\Semver\Ranges;
 
 use Omines\Semver\Exception\SemverException;
+use Omines\Semver\Parser;
 use Omines\Semver\Version;
 
 /**
@@ -34,59 +35,7 @@ class Range
     public function __construct($range)
     {
         $this->originalString = $range;
-
-        // Split disjunctive elements
-        $elements = preg_split('/\s*\|{1,2}\s*/', trim($range));
-        foreach ($elements as $element) {
-            // Detect hyphen
-            if (preg_match('/^\s*([^\s]+)\s+\-\s+([^\s]+)\s*$/', $element, $parts)) {
-                $primitives = [
-                    new Primitive(Version::fromString($parts[1]), Primitive::OPERATOR_LT, true),
-                    new Primitive(Version::fromString($parts[2]), Primitive::OPERATOR_GT, true),
-                ];
-            } else {
-                $primitives = [];
-                foreach (preg_split('/\s+/', $element) as $simple) {
-                    if (!preg_match('/^(\^|~|([><]?=?))(.*)$/', $simple, $parts)) {
-                        throw new SemverException(sprintf('Could not parse simple constraint "%s"', $simple));
-                    }
-                    $version = Version::fromString($parts[3] ?: '*');
-                    switch ($parts[1] ?: '=') {
-                        case '>':
-                            $primitives[] = new Primitive($version, Primitive::OPERATOR_GT);
-                            break;
-                        case '<':
-                            $primitives[] = new Primitive($version, Primitive::OPERATOR_LT);
-                            break;
-                        case '>=':
-                            $primitives[] = new Primitive($version, Primitive::OPERATOR_LT, true);
-                            break;
-                        case '<=':
-                            $primitives[] = new Primitive($version, Primitive::OPERATOR_GT, true);
-                            break;
-                        case '=':
-                            $primitives[] = new Primitive($version, Primitive::OPERATOR_EQ);
-                            break;
-                        case '!=':
-                        case '<>':
-                            $primitives[] = new Primitive($version, Primitive::OPERATOR_EQ, true);
-                            break;
-                        case '^':
-                            $primitives[] = new Primitive($version, Primitive::OPERATOR_LT, true);
-                            $primitives[] = new Primitive($version->getNextSignificant(), Primitive::OPERATOR_LT);
-                            break;
-                        case '~':
-                            break;
-                        default:
-                            throw new \RuntimeException($parts[1]);
-                    }
-                }
-            }
-            if (empty($primitives)) {
-                throw new SemverException('Range part cannot be empty');
-            }
-            $this->elements[] = $primitives;
-        }
+        $this->elements = Parser::parseRangeSet($range);
     }
 
     public static function fromString($range)
