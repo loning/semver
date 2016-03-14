@@ -119,6 +119,7 @@ class Parser
         if (!preg_match(self::REGEX_RANGE, $simple ?: '*', $parts)) {
             throw new SemverException(sprintf('Could not parse simple constraint "%s"', $simple));
         }
+        $operator = $parts[1] ?: '=';
         $partial = str_replace(['*', 'x', 'X'], '*', $parts[3]);
         $qualifier = count($parts) > 4 ? $parts[4] : '';
         if (0 === ($wildcard = array_search('*', $xrs = explode('.', $partial)))) {
@@ -135,7 +136,7 @@ class Parser
         $version = implode('.', $low).$qualifier;
         $upper = implode('.', $high);
 
-        switch ($parts[1] ?: '=') {
+        switch ($operator) {
             case '>':
                 return [new Primitive($version, Primitive::OPERATOR_GT)];
             case '<':

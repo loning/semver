@@ -77,6 +77,7 @@ $map = new VersionMap([
 $map[$second] = 'Package 2';
 foreach ($map as $key => $value) { ... }    // $key instanceof Version
 ```
+If errors occur a `SemverException` is thrown.
 
 ## Contributions
 

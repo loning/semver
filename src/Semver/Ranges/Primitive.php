@@ -63,13 +63,18 @@ class Primitive
         $comparison = $this->version->compare($version);
         switch ($this->operator) {
             case self::OPERATOR_EQ:
-                return !!$comparison === $this->negate;
+                $result = (bool) $comparison;
+                break;
             case self::OPERATOR_GT:
-                return $this->negate === ($comparison > 0);
+                $result = ($comparison > 0);
+                break;
             case self::OPERATOR_LT:
-                return $this->negate === ($comparison < 0);
+                $result = ($comparison < 0);
+                break;
+            default:
+                throw new SemverException(sprintf('Invalid primitive operator "%s"', $this->operator));
         }
-        throw new SemverException(sprintf('Invalid primitive operator "%s"', $this->operator));
+        return $this->negate === $result;
     }
 
     public function getNormalizedString()
