@@ -23,10 +23,9 @@ class PrimitiveTest extends \PHPUnit_Framework_TestCase
 {
     public function testAltInequality()
     {
-        $primitives = RangeParser::parseSimpleRange('<>1.0.0');
-        $notEqual = $primitives[0];
-        $this->assertTrue($notEqual->satisfiedBy('1.2.3'));
-        $this->assertFalse($notEqual->satisfiedBy('1.0.0'));
+        $primitive = Primitive::fromParts('1.0.0', '<>');
+        $this->assertTrue($primitive->satisfiedBy('1.2.3'));
+        $this->assertFalse($primitive->satisfiedBy('1.0.0'));
     }
 
     /**

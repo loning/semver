@@ -91,12 +91,30 @@ class RangeParser
         $partial = str_replace(['*', 'x', 'X'], '*', $parts[3]);
         $qualifier = count($parts) > 4 ? $parts[4] : '';
 
-        // Shortwire leading wildcard into the universal wildcard
+        // Redirect leading wildcard into the universal wildcard primitive right away
         if($partial[0] === '*') {
             return [Primitive::getWildcard()];
         }
+        return self::processNormalizedSimpleRange($operator, $partial, $qualifier);
+    }
 
-        list($lbound, $ubound, $nrs) = self::splitXr($partial, $qualifier);
+    private static function processNormalizedSimpleRange($operator, $partial, $qualifier)
+    {
+        $xrs = explode('.', $partial);
+        if ($wildcard = array_search('*', $xrs)) {
+            $xrs = array_slice($xrs, 0, $wildcard);
+        } elseif (count($xrs) < 3) {
+            $wildcard = count($xrs);
+        } else {
+            return self::primitivesFromSimple(Version::fromString($partial . $qualifier), $operator, null, $xrs);
+        }
+        $low = $high = array_pad($xrs, 3, 0);
+        ++$high[$wildcard - 1];
+        return self::primitivesFromSimple(Version::fromString(implode('.', $low) . $qualifier), $operator, $high, $xrs);
+    }
+
+    private static function primitivesFromSimple(Version $lbound, $operator, array $ubound = null, array $nrs)
+    {
         switch ($operator) {
             case self::OPERATOR_CARET:
                 return self::parseCaret($lbound, $ubound);
@@ -126,7 +144,7 @@ class RangeParser
         // @codeCoverageIgnoreEnd
     }
 
-    public static function parseCaret(Version $lbound, array $ubound = null)
+    private static function parseCaret(Version $lbound, array $ubound = null)
     {
         if (isset($ubound)) {
             $ubound = Version::highest(
@@ -139,7 +157,7 @@ class RangeParser
         return self::between($lbound, $ubound);
     }
 
-    public static function parseTilde(Version $lbound, array $ubound = null, array $nrs)
+    private static function parseTilde(Version $lbound, array $ubound = null, array $nrs)
     {
         if (count($nrs) == 1) {
             $upper = Version::fromString($nrs[0]+1);
@@ -151,26 +169,6 @@ class RangeParser
             $upper = Version::highest($upper, Version::fromString(implode('.', $ubound)));
         }
         return self::between($lbound, $upper);
-    }
-
-    /**
-     * @param string $partial
-     * @param string $qualifier
-     * @return array An array consisting of the base version, an array of NRs as the ubound, and the NRs.
-     */
-    private static function splitXr($partial, $qualifier = '')
-    {
-        $xrs = explode('.', $partial);
-        if ($wildcard = array_search('*', $xrs)) {
-            $xrs = array_slice($xrs, 0, $wildcard);
-        } elseif (count($xrs) < 3) {
-            $wildcard = count($xrs);
-        } else {
-            return [Version::fromString($partial . $qualifier), null, $xrs];
-        }
-        $low = $high = array_pad($xrs, 3, 0);
-        ++$high[$wildcard - 1];
-        return [Version::fromString(implode('.', $low) . $qualifier), $high, $xrs];
     }
 
     /**
