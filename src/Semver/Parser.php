@@ -147,10 +147,7 @@ class Parser
                 return [new Primitive($version, Primitive::OPERATOR_GT, true)];
             case '=':
                 if ($wildcard) {
-                    return [
-                        new Primitive($version, Primitive::OPERATOR_LT, true),
-                        new Primitive($upper, Primitive::OPERATOR_LT),
-                    ];
+                    return self::between($version, $upper);
                 }
                 return [new Primitive($version, Primitive::OPERATOR_EQ)];
             case '!=':
@@ -162,10 +159,7 @@ class Parser
             case '^':
                 $version = Version::fromString($version);
                 $upper = Version::highest($version->getNextSignificant(), Version::fromString($upper));
-                return [
-                    new Primitive($version, Primitive::OPERATOR_LT, true),
-                    new Primitive($upper, Primitive::OPERATOR_LT),
-                ];
+                return self::between($version, $upper);
             case '~':
                 if (count($xrs) == 1) {
                     $upper = Version::fromString($xrs[0]+1);
@@ -173,13 +167,18 @@ class Parser
                     ++$xrs[1];
                     $upper = Version::fromString(implode('.', array_slice($xrs, 0, 2)));
                 }
-                return [
-                    new Primitive($version, Primitive::OPERATOR_LT, true),
-                    new Primitive($upper, Primitive::OPERATOR_LT),
-                ];
+                return self::between($version, $upper);
         // @codeCoverageIgnoreStart
         }
         throw new SemverException('Unexpected operator ' . $parts[1]);
         // @codeCoverageIgnoreEnd
+    }
+
+    private static function between($lower, $upper)
+    {
+        return [
+            new Primitive($lower, Primitive::OPERATOR_LT, true),
+            new Primitive($upper, Primitive::OPERATOR_LT),
+        ];
     }
 }
