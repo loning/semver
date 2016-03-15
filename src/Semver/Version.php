@@ -10,6 +10,7 @@
 
 namespace Omines\Semver;
 
+use Omines\Semver\Parser\VersionParser;
 use Omines\Semver\Ranges\Range;
 
 /**
@@ -55,10 +56,10 @@ class Version
             throw new \InvalidArgumentException('Only Semver2 parsing is supported right now');
         }
 
-        $parsed = Parser::parseSemver2($version);
-        $this->version = $parsed[Parser::SECTION_VERSION];
-        $this->prerelease = $parsed[Parser::SECTION_PRERELEASE];
-        $this->build = $parsed[Parser::SECTION_BUILD];
+        $parsed = VersionParser::parseSemver2($version);
+        $this->version = $parsed[VersionParser::SECTION_VERSION];
+        $this->prerelease = $parsed[VersionParser::SECTION_PRERELEASE];
+        $this->build = $parsed[VersionParser::SECTION_BUILD];
         $this->compliance = self::COMPLIANCE_SEMVER2;
     }
 

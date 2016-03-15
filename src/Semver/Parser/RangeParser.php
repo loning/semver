@@ -8,67 +8,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver;
+namespace Omines\Semver\Parser;
 
 use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Ranges\Primitive;
+use Omines\Semver\Version;
 
 /**
- * Parser.
+ * RangeParser
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
-class Parser
+class RangeParser
 {
-    const SECTION_VERSION = 'version';
-    const SECTION_PRERELEASE = 'prerelease';
-    const SECTION_BUILD = 'build';
-
     const REGEX_HYPHEN = '#^\s*([^\s]+)\s+\-\s+([^\s]+)\s*$#';
     const REGEX_RANGE = '#^\s*(\^|~|!=|<>|([><]?=?))([\dxX\*\.]+)(\-([a-z0-9\.\-]+))?\s*$#i';
-    const REGEX_SEMVER2 = '#^[=v\s]*([\d\.]+)(\-([a-z0-9\.\-]+))?(\+([a-z0-9\.]+))?\s*$#i';
     const REGEX_SPLIT_RANGESET = '#\s*\|{1,2}\s*#';
-
-    /**
-     * @param string $version
-     * @return array[] Array of arrays containing the separate sections.
-     */
-    public static function parseSemver2($version)
-    {
-        // Extract into separate parts
-        if (!preg_match(self::REGEX_SEMVER2, $version, $matches)) {
-            throw new SemverException(sprintf('Could not parse Semver2 string "%s"', $version));
-        }
-
-        // Parse version part
-        $numbers = array_pad(array_map(function ($element) {
-            if (!ctype_digit($element)) {
-                throw new SemverException(sprintf('"%s" is not a valid version element', $element));
-            }
-            return (int) $element;
-        }, explode('.', $matches[1])), 3, 0);
-        if (count($numbers) > 3) {
-            throw new SemverException(sprintf('Semver string "%s" contains %d version numbers, should be 3 at most', $version, count($numbers)));
-        }
-
-        // Parse prerelease and build parts
-        return [
-            self::SECTION_VERSION => $numbers,
-            self::SECTION_PRERELEASE => isset($matches[3]) ?  self::splitSemver2Metadata($matches[3]) : [],
-            self::SECTION_BUILD => isset($matches[5]) ? self::splitSemver2Metadata($matches[5]) : [],
-        ];
-    }
-
-    private static function splitSemver2Metadata($metadata)
-    {
-        if (!isset($metadata) || 0 === strlen($metadata)) {
-            return [];
-        }
-
-        return array_map(function ($element) {
-            return ctype_digit($element) ? (int) $element : $element;
-        }, explode('.', $metadata));
-    }
 
     /**
      * @param string $range
@@ -92,14 +47,7 @@ class Parser
     {
         // Detect hyphen
         if (preg_match(self::REGEX_HYPHEN, $range, $parts)) {
-            $nrs = explode('.', $parts[2]);
-            if (count($nrs) < 3) {
-                ++$nrs[count($nrs) - 1];
-                $ubound = new Primitive(implode('.', $nrs), Primitive::OPERATOR_LT);
-            } else {
-                $ubound = new Primitive($parts[2], Primitive::OPERATOR_GT, true);
-            }
-            return [ new Primitive($parts[1], Primitive::OPERATOR_LT, true), $ubound ];
+            return self::parseHyphen($parts[1], $parts[2]);
         }
 
         // Split regular simple constraints
@@ -108,6 +56,23 @@ class Parser
             $primitives += self::parseSimpleRange($simple);
         }
         return $primitives;
+    }
+
+    /**
+     * @param string $from
+     * @param string $to
+     * @return Primitive[]
+     */
+    public static function parseHyphen($from, $to)
+    {
+        $nrs = explode('.', $to);
+        if (count($nrs) < 3) {
+            ++$nrs[count($nrs) - 1];
+            $ubound = new Primitive(implode('.', $nrs), Primitive::OPERATOR_LT);
+        } else {
+            $ubound = new Primitive($to, Primitive::OPERATOR_GT, true);
+        }
+        return [ new Primitive($from, Primitive::OPERATOR_LT, true), $ubound ];
     }
 
     /**
@@ -131,7 +96,7 @@ class Parser
             $wildcard = count($xrs);
         }
         $low = $high = array_pad($xrs, 3, 0);
-        if ($wildcard) {
+        if ($wildcard > 0) {
             ++$high[$wildcard - 1];
         }
         $version = implode('.', $low).$qualifier;
@@ -147,13 +112,13 @@ class Parser
             case '<=':
                 return [new Primitive($version, Primitive::OPERATOR_GT, true)];
             case '=':
-                if ($wildcard) {
+                if ($wildcard > 0) {
                     return self::between($version, $upper);
                 }
                 return [new Primitive($version, Primitive::OPERATOR_EQ)];
             case '!=':
             case '<>':
-                if ($wildcard) {
+                if ($wildcard > 0) {
                     throw new SemverException('Inequality operator requires exact version');
                 }
                 return [new Primitive($version, Primitive::OPERATOR_EQ, true)];
@@ -169,7 +134,7 @@ class Parser
                     $upper = Version::fromString(implode('.', array_slice($xrs, 0, 2)));
                 }
                 return self::between($version, $upper);
-        // @codeCoverageIgnoreStart
+            // @codeCoverageIgnoreStart
         }
         throw new SemverException('Unexpected operator ' . $parts[1]);
         // @codeCoverageIgnoreEnd

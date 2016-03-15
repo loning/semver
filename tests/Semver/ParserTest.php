@@ -10,7 +10,8 @@
 
 namespace Omines\Semver\Tests;
 
-use Omines\Semver\Parser;
+use Omines\Semver\Parser\RangeParser;
+use Omines\Semver\Parser\VersionParser;
 
 /**
  * ParserTest.
@@ -27,7 +28,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testSemver2($input, $output)
     {
-        $this->assertSame($output, Parser::parseSemver2($input));
+        $this->assertSame($output, VersionParser::parseSemver2($input));
     }
 
     /**
@@ -43,7 +44,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $output = [];
         foreach (['1', '1.0', '1.0.0', '1-alpha.1', '1+build.2', '1-rc.3+build.3'] as $sample) {
-            $output[$sample] = [$sample, Parser::parseSemver2($sample)];
+            $output[$sample] = [$sample, VersionParser::parseSemver2($sample)];
         }
         file_put_contents(__DIR__ . '/Data/ParserTestData.json', json_encode($output, JSON_PRETTY_PRINT));
     }
@@ -54,7 +55,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidSemver2Exception()
     {
-        Parser::parseSemver2('foo/bar');
+        VersionParser::parseSemver2('foo/bar');
     }
 
     /**
@@ -63,7 +64,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testBrokenSemver2VersionException()
     {
-        Parser::parseSemver2('1..2..3');
+        VersionParser::parseSemver2('1..2..3');
     }
 
     /**
@@ -72,7 +73,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testTooLongSemver2Exception()
     {
-        Parser::parseSemver2('1.2.3.4');
+        VersionParser::parseSemver2('1.2.3.4');
     }
 
     /**
@@ -81,7 +82,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testBrokenRangeException()
     {
-        Parser::parseRange('aap || noot || mies');
+        RangeParser::parseRange('test || for || exception');
     }
 
     /**
@@ -90,6 +91,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidInequalityException()
     {
-        Parser::parseRange('!=1.x');
+        RangeParser::parseRange('!=1.x');
     }
 }

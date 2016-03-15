@@ -10,7 +10,7 @@
 
 namespace Omines\Semver\Ranges;
 
-use Omines\Semver\Parser;
+use Omines\Semver\Parser\RangeParser;
 use Omines\Semver\Version;
 
 /**
@@ -34,7 +34,7 @@ class Range
     public function __construct($range)
     {
         $this->originalString = $range;
-        $this->elements = Parser::parseRangeSet($range);
+        $this->elements = RangeParser::parseRangeSet($range);
     }
 
     /**
