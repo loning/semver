@@ -25,6 +25,9 @@ class RangeParser
     const REGEX_RANGE = '#^\s*(\^|~|!=|<>|([><]?=?))([\dxX\*\.]+)(\-([a-z0-9\.\-]+))?\s*$#i';
     const REGEX_SPLIT_RANGESET = '#\s*\|{1,2}\s*#';
 
+    const OPERATOR_CARET = '^';
+    const OPERATOR_TILDE = '~';
+
     /**
      * @param string $range
      * @return Primitive[][] Disjunctive collection of conjunctive collections of primitives.
@@ -85,61 +88,96 @@ class RangeParser
             throw new SemverException(sprintf('Could not parse simple constraint "%s"', $simple));
         }
         $operator = $parts[1] ?: '=';
-        $xrs = explode('.', str_replace(['*', 'x', 'X'], '*', $parts[3]));
+        $partial = str_replace(['*', 'x', 'X'], '*', $parts[3]);
         $qualifier = count($parts) > 4 ? $parts[4] : '';
 
-        if($xrs[0] === '*') {
-            return [new Primitive(Version::fromString('0'), Primitive::OPERATOR_LT, true)];
-        } elseif ($wildcard = array_search('*', $xrs)) {
-            $xrs = array_slice($xrs, 0, $wildcard);
-        } elseif (count($xrs) < 3) {
-            $wildcard = count($xrs);
+        // Shortwire leading wildcard into the universal wildcard
+        if($partial[0] === '*') {
+            return [Primitive::getWildcard()];
         }
-        $low = $high = array_pad($xrs, 3, 0);
-        if ($wildcard > 0) {
-            ++$high[$wildcard - 1];
-        }
-        $version = implode('.', $low).$qualifier;
-        $upper = implode('.', $high);
 
+        list($lbound, $ubound, $nrs) = self::splitXr($partial, $qualifier);
         switch ($operator) {
-            case '>':
-                return [new Primitive($version, Primitive::OPERATOR_GT)];
-            case '<':
-                return [new Primitive($version, Primitive::OPERATOR_LT)];
-            case '>=':
-                return [new Primitive($version, Primitive::OPERATOR_LT, true)];
-            case '<=':
-                return [new Primitive($version, Primitive::OPERATOR_GT, true)];
-            case '=':
-                if ($wildcard > 0) {
-                    return self::between($version, $upper);
+            case self::OPERATOR_CARET:
+                return self::parseCaret($lbound, $ubound);
+            case self::OPERATOR_TILDE:
+                return self::parseTilde($lbound, $ubound, $nrs);
+            case Primitive::OPERATOR_GE:
+            case Primitive::OPERATOR_LT:
+                return [Primitive::fromParts($lbound, $operator)];
+            case Primitive::OPERATOR_GT:
+            case Primitive::OPERATOR_LE:
+                return [Primitive::fromParts($ubound ? implode('.', $ubound) : $lbound, $operator)];
+            case Primitive::OPERATOR_EQ:
+                if ($ubound > 0) {
+                    return self::between($lbound, implode('.', $ubound));
                 }
-                return [new Primitive($version, Primitive::OPERATOR_EQ)];
-            case '!=':
-            case '<>':
-                if ($wildcard > 0) {
+                return [new Primitive($lbound, Primitive::OPERATOR_EQ)];
+            case Primitive::OPERATOR_NE:
+            case Primitive::OPERATOR_NE_ALT:
+                if ($ubound) {
                     throw new SemverException('Inequality operator requires exact version');
                 }
-                return [new Primitive($version, Primitive::OPERATOR_EQ, true)];
-            case '^':
-                $version = Version::fromString($version);
-                $upper = Version::highest($version->getNextSignificant(), Version::fromString($upper));
-                return self::between($version, $upper);
-            case '~':
-                if (count($xrs) == 1) {
-                    $upper = Version::fromString($xrs[0]+1);
-                } else {
-                    ++$xrs[1];
-                    $upper = Version::fromString(implode('.', array_slice($xrs, 0, 2)));
-                }
-                return self::between($version, $upper);
-            // @codeCoverageIgnoreStart
+                return [Primitive::fromParts($lbound, Primitive::OPERATOR_NE)];
         }
-        throw new SemverException('Unexpected operator ' . $parts[1]);
+
+        // @codeCoverageIgnoreStart
+        throw new SemverException(sprintf('Unknown operator "%s"', $operator));
         // @codeCoverageIgnoreEnd
     }
 
+    public static function parseCaret(Version $lbound, array $ubound = null)
+    {
+        if (isset($ubound)) {
+            $ubound = Version::highest(
+                $lbound->getNextSignificant(),
+                Version::fromString(implode('.', $ubound))
+            );
+        } else {
+            $ubound = $lbound->getNextSignificant();
+        }
+        return self::between($lbound, $ubound);
+    }
+
+    public static function parseTilde(Version $lbound, array $ubound = null, array $nrs)
+    {
+        if (count($nrs) == 1) {
+            $upper = Version::fromString($nrs[0]+1);
+        } else {
+            ++$nrs[1];
+            $upper = Version::fromString(implode('.', array_slice($nrs, 0, 2)));
+        }
+        if (isset($ubound)) {
+            $upper = Version::highest($upper, Version::fromString(implode('.', $ubound)));
+        }
+        return self::between($lbound, $upper);
+    }
+
+    /**
+     * @param string $partial
+     * @param string $qualifier
+     * @return array An array consisting of the base version, an array of NRs as the ubound, and the NRs.
+     */
+    private static function splitXr($partial, $qualifier = '')
+    {
+        $xrs = explode('.', $partial);
+        if ($wildcard = array_search('*', $xrs)) {
+            $xrs = array_slice($xrs, 0, $wildcard);
+        } elseif (count($xrs) < 3) {
+            $wildcard = count($xrs);
+        } else {
+            return [Version::fromString($partial . $qualifier), null, $xrs];
+        }
+        $low = $high = array_pad($xrs, 3, 0);
+        ++$high[$wildcard - 1];
+        return [Version::fromString(implode('.', $low) . $qualifier), $high, $xrs];
+    }
+
+    /**
+     * @param Version|string $lower
+     * @param Version|string $upper
+     * @return Primitive[] Two primitives marking the non-inclusive range.
+     */
     private static function between($lower, $upper)
     {
         return [

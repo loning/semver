@@ -61,6 +61,26 @@ class Primitive
         $this->negate = (bool) $negate;
     }
 
+    public static function fromParts($version, $operator)
+    {
+        if (array_key_exists($operator, self::$inversions)) {
+            return new self($version, $operator, false);
+        } elseif (false !== ($inverted = array_search($operator, self::$inversions))) {
+            return new self($version, $inverted, true);
+        } elseif (self::OPERATOR_NE_ALT === $operator) {
+            return new self($version, self::OPERATOR_EQ, true);
+        }
+        throw new SemverException(sprintf('Invalid primitive operator "%s%s"', $operator, $version));
+    }
+
+    /**
+     * @return Primitive A primitive matching all versions.
+     */
+    public static function getWildcard()
+    {
+        return new self(Version::fromString('0'), Primitive::OPERATOR_LT, true);
+    }
+
     /**
      * @param Version|string $version
      * @return bool

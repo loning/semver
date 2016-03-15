@@ -28,6 +28,8 @@ class RangeTest extends \PHPUnit_Framework_TestCase
     {
         $range = Range::fromString($string);
         $version = Version::fromString('6.8.4-alpha');
+
+        $this->assertEquals($string, $range->getOriginalString());
         $this->assertEquals($range->satisfiedBy($version), $version->satisfies($range));
     }
 
