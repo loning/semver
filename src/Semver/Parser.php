@@ -120,11 +120,12 @@ class Parser
             throw new SemverException(sprintf('Could not parse simple constraint "%s"', $simple));
         }
         $operator = $parts[1] ?: '=';
-        $partial = str_replace(['*', 'x', 'X'], '*', $parts[3]);
+        $xrs = explode('.', str_replace(['*', 'x', 'X'], '*', $parts[3]));
         $qualifier = count($parts) > 4 ? $parts[4] : '';
-        if (0 === ($wildcard = array_search('*', $xrs = explode('.', $partial)))) {
+
+        if($xrs[0] === '*') {
             return [new Primitive(Version::fromString('0'), Primitive::OPERATOR_LT, true)];
-        } elseif ($wildcard) {
+        } elseif ($wildcard = array_search('*', $xrs)) {
             $xrs = array_slice($xrs, 0, $wildcard);
         } elseif (count($xrs) < 3) {
             $wildcard = count($xrs);

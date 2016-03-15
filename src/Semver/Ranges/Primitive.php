@@ -24,10 +24,18 @@ class Primitive
     const OPERATOR_GT = '>';
     const OPERATOR_LT = '<';
 
+    const OPERATOR_NE = '!=';
+    const OPERATOR_GE = '>=';
+    const OPERATOR_LE = '<=';
+
+    const OPERATOR_NE_ALT = '<>';
+
+    const REGEX_PRIMITIVE = '#^\s*(!=|<>|([><]?=?))([\d\.]+)\s*$#';
+
     private static $inversions = [
-        self::OPERATOR_EQ => '!=',
-        self::OPERATOR_GT => '<=',
-        self::OPERATOR_LT => '>=',
+        self::OPERATOR_EQ => self::OPERATOR_NE,
+        self::OPERATOR_GT => self::OPERATOR_LE,
+        self::OPERATOR_LT => self::OPERATOR_GE,
     ];
 
     /** @var Version */
