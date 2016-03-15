@@ -9,7 +9,10 @@
 
 namespace Omines\Semver\Tests;
 
+use Omines\Semver\Parser\RangeParser;
+use Omines\Semver\Parser\VersionParser;
 use Omines\Semver\Ranges\Primitive;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * PrimitiveTest
@@ -18,6 +21,14 @@ use Omines\Semver\Ranges\Primitive;
  */
 class PrimitiveTest extends \PHPUnit_Framework_TestCase
 {
+    public function testAltInequality()
+    {
+        $primitives = RangeParser::parseSimpleRange('<>1.0.0');
+        $notEqual = $primitives[0];
+        $this->assertTrue($notEqual->satisfiedBy('1.2.3'));
+        $this->assertFalse($notEqual->satisfiedBy('1.0.0'));
+    }
+
     /**
      * @expectedException \Omines\Semver\Exception\SemverException
      * @expectedExceptionMessage Invalid primitive operator "invalid"
@@ -26,5 +37,14 @@ class PrimitiveTest extends \PHPUnit_Framework_TestCase
     {
         $primitive = new Primitive('1.0.0', 'invalid');
         $primitive->satisfiedBy('1.2.0');
+    }
+
+    /**
+     * @expectedException \Omines\Semver\Exception\SemverException
+     * @expectedExceptionMessage Invalid primitive operator "invalid
+     */
+    public function testInvalidPartThrows()
+    {
+        Primitive::fromParts('1.0.0', 'invalid');
     }
 }

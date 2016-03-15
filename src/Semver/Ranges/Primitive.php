@@ -61,6 +61,11 @@ class Primitive
         $this->negate = (bool) $negate;
     }
 
+    /**
+     * @param string|Version $version
+     * @param string $operator One of the simple or negated operators.
+     * @return Primitive
+     */
     public static function fromParts($version, $operator)
     {
         if (array_key_exists($operator, self::$inversions)) {
@@ -102,7 +107,7 @@ class Primitive
             default:
                 throw new SemverException(sprintf('Invalid primitive operator "%s"', $this->operator));
         }
-        return $this->negate ^ $result;
+        return $this->negate xor $result;
     }
 
     public function getNormalizedString()
