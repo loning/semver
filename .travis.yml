@@ -15,7 +15,6 @@ matrix:
     - php: nightly
 
 before_script:
-  - curl --version
   - composer self-update
   - composer install --no-interaction
 

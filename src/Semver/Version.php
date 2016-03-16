@@ -84,10 +84,9 @@ class Version
      */
     public static function highest($versions)
     {
-        $versions = is_array($versions) ? $versions : func_get_args();
-        return array_reduce($versions, function (Version $carry, $version) {
-            return ($carry->compare($version) > 0 ? $carry : $version);
-        }, array_shift($versions));
+        return self::reduce(is_array($versions) ? $versions : func_get_args(), function (Version $carry, Version $version) {
+            return $carry->compare($version) > 0;
+        });
     }
 
     /**
@@ -99,9 +98,23 @@ class Version
      */
     public static function lowest($versions)
     {
-        $versions = is_array($versions) ? $versions : func_get_args();
-        return array_reduce($versions, function (Version $carry, $version) {
-            return ($carry->compare($version) < 0 ? $carry : $version);
+        return self::reduce(is_array($versions) ? $versions : func_get_args(), function (Version $carry, Version $version) {
+            return $carry->compare($version) < 0;
+        });
+    }
+
+    /**
+     * @param mixed[] $versions
+     * @param callable $selector Returns true to select the first parameter, false for the second.
+     * @return Version
+     */
+    private static function reduce(array $versions, callable $selector)
+    {
+        $versions = array_map(function ($element) {
+            return $element instanceof Version ? $element : self::fromString($element);
+        }, $versions);
+        return array_reduce($versions, function (Version $carry, $version) use ($selector) {
+            return $selector($carry, $version) ? $carry : $version;
         }, array_shift($versions));
     }
 
