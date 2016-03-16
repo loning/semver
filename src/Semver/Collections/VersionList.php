@@ -41,7 +41,7 @@ class VersionList extends AbstractVersionCollection
     }
 
     /**
-     * @return VersionMapIterator
+     * @return VersionListIterator
      */
     public function getIterator()
     {
@@ -105,9 +105,9 @@ class VersionList extends AbstractVersionCollection
      */
     public function rsort()
     {
-        usort($this->data, function ($a, $b) {
-            /* @var Version[] $a */
-            return -($a[0]->compare($b[0]));
+        usort($this->data, function ($first, $second) {
+            /* @var Version[] $first */
+            return -($first[0]->compare($second[0]));
         });
     }
 
@@ -116,9 +116,9 @@ class VersionList extends AbstractVersionCollection
      */
     public function sort()
     {
-        usort($this->data, function ($a, $b) {
-            /* @var Version[] $a */
-            return $a[0]->compare($b[0]);
+        usort($this->data, function ($first, $second) {
+            /* @var Version[] $first */
+            return $first[0]->compare($second[0]);
         });
     }
 }

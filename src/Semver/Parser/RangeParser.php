@@ -62,20 +62,20 @@ class RangeParser
     }
 
     /**
-     * @param string $from
-     * @param string $to
+     * @param string $lower
+     * @param string $upper
      * @return Primitive[]
      */
-    public static function parseHyphen($from, $to)
+    public static function parseHyphen($lower, $upper)
     {
-        $nrs = explode('.', $to);
+        $nrs = explode('.', $upper);
         if (count($nrs) < 3) {
             ++$nrs[count($nrs) - 1];
             $ubound = new Primitive(implode('.', $nrs), Primitive::OPERATOR_LT);
         } else {
-            $ubound = new Primitive($to, Primitive::OPERATOR_GT, true);
+            $ubound = new Primitive($upper, Primitive::OPERATOR_GT, true);
         }
-        return [ new Primitive($from, Primitive::OPERATOR_LT, true), $ubound ];
+        return [ new Primitive($lower, Primitive::OPERATOR_LT, true), $ubound ];
     }
 
     /**

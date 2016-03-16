@@ -120,7 +120,7 @@ class Version
 
     /**
      * @param Version $that Version to compare to.
-     * @return int Negative is this is smaller, positive if that is smaller, or 0 if equals.
+     * @return integer|double Negative is this is smaller, positive if that is smaller, or 0 if equals.
      */
     public function compare(Version $that)
     {
@@ -129,7 +129,7 @@ class Version
 
     /**
      * @param Version $that
-     * @return int Negative is this is smaller, positive if that is smaller, or 0 if equals.
+     * @return integer|double Negative is this is smaller, positive if that is smaller, or 0 if equals.
      */
     private function compareByVersion(Version $that)
     {

@@ -27,6 +27,11 @@ class VersionParser
 
     const REGEX_SEMVER2 = '#^[=v\s]*([\d\.]+)(\-([a-z0-9\.\-]+))?(\+([a-z0-9\.]+))?\s*$#i';
 
+    /**
+     * @param string $version
+     * @param \Exception[] $issues
+     * @return array|null
+     */
     public static function parse($version, &$issues)
     {
         static $parsers = [
@@ -46,7 +51,7 @@ class VersionParser
 
     /**
      * @param string $version
-     * @return array[] Array of arrays containing the separate sections.
+     * @return array<string,array> Array of arrays containing the separate sections.
      */
     public static function parseSemver2($version)
     {
