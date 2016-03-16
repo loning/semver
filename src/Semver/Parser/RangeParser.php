@@ -23,7 +23,7 @@ class RangeParser
 {
     const REGEX_HYPHEN = '#^\s*([^\s]+)\s+\-\s+([^\s]+)\s*$#';
     const REGEX_RANGE = '#^\s*(\^|~|!=|<>|([><]?=?))([\dxX\*\.]+)(\-([a-z0-9\.\-]+))?\s*$#i';
-    const REGEX_SPLIT_RANGESET = '#\s*\|{1,2}\s*#';
+    const REGEX_SPLIT_RANGESET = '#\s*\|\|?\s*#';
 
     const OPERATOR_CARET = '^';
     const OPERATOR_TILDE = '~';
@@ -146,15 +146,11 @@ class RangeParser
 
     private static function parseCaret(Version $lbound, array $ubound = null)
     {
+        $realbound = $lbound->getNextSignificant();
         if (isset($ubound)) {
-            $ubound = Version::highest(
-                $lbound->getNextSignificant(),
-                Version::fromString(implode('.', $ubound))
-            );
-        } else {
-            $ubound = $lbound->getNextSignificant();
+            $realbound = Version::highest($realbound, Version::fromString(implode('.', $ubound)));
         }
-        return self::between($lbound, $ubound);
+        return self::between($lbound, $realbound);
     }
 
     private static function parseTilde(Version $lbound, array $ubound = null, array $nrs)

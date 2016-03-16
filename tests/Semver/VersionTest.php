@@ -62,7 +62,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue(Version::fromString('1-alpha')->lessThan(Version::fromString('1')));
         $this->assertTrue(Version::fromString('1')->greaterThan(Version::fromString('1-rc')));
-        $this->assertTrue(Version::fromString('1-beta')->lessThan(Version::fromString('1')));
+        $this->assertTrue(Version::fromString('1-beta')->lessThanOrEqual(Version::fromString('1')));
     }
 
     public function testComparisons()
@@ -80,12 +80,20 @@ class VersionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Only Semver2 parsing is supported right now
+     * @dataProvider looseVersionsProvider
      */
-    public function testLooseParsingNotYetSupported()
+    public function testLooseParsing($loose, $strict)
     {
-        Version::fromString('1.2.3', Version::COMPLIANCE_NONE);
+        //$this->assertEquals($strict, Version::fromString($loose, Version::COMPLIANCE_NONE)->getNormalizedString());
+        Version::fromString($loose, Version::COMPLIANCE_NONE)->getNormalizedString();
+    }
+
+    public function looseVersionsProvider()
+    {
+        $data = json_decode(file_get_contents(__DIR__ . '/Data/Loose/Versions.json'), JSON_OBJECT_AS_ARRAY);
+        foreach ($data as $key => $value) {
+            yield $key => [$key, $value];
+        }
     }
 
     public function testSemverIgnoresBuildData()

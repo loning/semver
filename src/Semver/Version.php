@@ -10,6 +10,7 @@
 
 namespace Omines\Semver;
 
+use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Parser\VersionParser;
 use Omines\Semver\Ranges\Range;
 
@@ -52,15 +53,16 @@ class Version
     {
         $this->originalString = $version;
 
-        if ($compliance != self::COMPLIANCE_SEMVER2) {
-            throw new \InvalidArgumentException('Only Semver2 parsing is supported right now');
+        if (!($parsed = VersionParser::parse($version, $issues))) {
+            throw reset($issues);
+        }
+        if ($compliance != ($this->compliance = $parsed[VersionParser::COMPLIANCE]) && $compliance) {
+            throw new SemverException(sprintf('Version "%s" is not of required compliance level', $version));
         }
 
-        $parsed = VersionParser::parseSemver2($version);
-        $this->version = $parsed[VersionParser::SECTION_VERSION];
-        $this->prerelease = $parsed[VersionParser::SECTION_PRERELEASE];
-        $this->build = $parsed[VersionParser::SECTION_BUILD];
-        $this->compliance = self::COMPLIANCE_SEMVER2;
+        $this->version = $parsed[VersionParser::VERSION];
+        $this->prerelease = $parsed[VersionParser::PRERELEASE];
+        $this->build = $parsed[VersionParser::BUILD];
     }
 
     /**

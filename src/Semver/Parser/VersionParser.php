@@ -11,6 +11,7 @@
 namespace Omines\Semver\Parser;
 
 use Omines\Semver\Exception\SemverException;
+use Omines\Semver\Version;
 
 /**
  * VersionParser
@@ -19,11 +20,29 @@ use Omines\Semver\Exception\SemverException;
  */
 class VersionParser
 {
-    const SECTION_VERSION = 'version';
-    const SECTION_PRERELEASE = 'prerelease';
-    const SECTION_BUILD = 'build';
+    const VERSION = 'version';
+    const PRERELEASE = 'prerelease';
+    const BUILD = 'build';
+    const COMPLIANCE = 'compliance';
 
     const REGEX_SEMVER2 = '#^[=v\s]*([\d\.]+)(\-([a-z0-9\.\-]+))?(\+([a-z0-9\.]+))?\s*$#i';
+
+    public static function parse($version, &$issues)
+    {
+        static $parsers = [
+            [self::class, 'parseSemver2'],
+            [self::class, 'parseLoose'],
+        ];
+        $issues = [];
+        foreach($parsers as $parser) {
+            try {
+                return $parser($version);
+            } catch(\Exception $e) {
+                $issues[] = $e;
+            }
+        }
+        return null;
+    }
 
     /**
      * @param string $version
@@ -49,13 +68,37 @@ class VersionParser
 
         // Parse prerelease and build parts
         return [
-            self::SECTION_VERSION => $numbers,
-            self::SECTION_PRERELEASE => isset($matches[3]) ?  self::splitSemver2Metadata($matches[3]) : [],
-            self::SECTION_BUILD => isset($matches[5]) ? self::splitSemver2Metadata($matches[5]) : [],
+            self::VERSION => $numbers,
+            self::PRERELEASE => isset($matches[3]) ?  self::splitMetadata($matches[3]) : [],
+            self::BUILD => isset($matches[5]) ? self::splitMetadata($matches[5]) : [],
+            self::COMPLIANCE => Version::COMPLIANCE_SEMVER2,
         ];
     }
 
-    private static function splitSemver2Metadata($metadata)
+    public static function parseLoose($version)
+    {
+        $numbers = $pre = $build = [];
+
+        foreach (preg_split('/[\.\-]/', $version) as $element) {
+            if (ctype_digit($element)) {
+                if(count($numbers) < 3) {
+                    $numbers[] = (int) $element;
+                } else {
+                    $pre[] = (int) $element;
+                }
+            } else {
+                $pre[] = $element;
+            }
+        }
+        return [
+            self::VERSION => $numbers,
+            self::PRERELEASE => $pre,
+            self::BUILD => $build,
+            self::COMPLIANCE => Version::COMPLIANCE_NONE,
+        ];
+    }
+
+    private static function splitMetadata($metadata)
     {
         if (!isset($metadata) || 0 === strlen($metadata)) {
             return [];
