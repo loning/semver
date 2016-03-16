@@ -80,12 +80,33 @@ class VersionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException \Omines\Semver\Exception\SemverException
+     * @expectedExceptionMessage not of required compliance level
+     */
+    public function testLooseParsingFailCompliance()
+    {
+        Version::fromString("1.9.final", Version::COMPLIANCE_SEMVER2);
+    }
+
+    /**
+     * @expectedException \Omines\Semver\Exception\SemverException
+     * @expectedExceptionMessage No usable version numbers detected
+     */
+    public function testLooseParsingFailMalformed()
+    {
+        Version::fromString("final", Version::COMPLIANCE_NONE);
+    }
+
+
+    /**
      * @dataProvider looseVersionsProvider
      */
     public function testLooseParsing($loose, $strict)
     {
         //$this->assertEquals($strict, Version::fromString($loose, Version::COMPLIANCE_NONE)->getNormalizedString());
-        Version::fromString($loose, Version::COMPLIANCE_NONE)->getNormalizedString();
+        $version = Version::fromString($loose, Version::COMPLIANCE_NONE);
+        $this->assertTrue($version->isLooselyMatched());
+        Version::fromString('0.6.8')->compare($version);
     }
 
     public function looseVersionsProvider()

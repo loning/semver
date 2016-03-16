@@ -34,10 +34,10 @@ class VersionParser
             [self::class, 'parseLoose'],
         ];
         $issues = [];
-        foreach($parsers as $parser) {
+        foreach ($parsers as $parser) {
             try {
                 return $parser($version);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $issues[] = $e;
             }
         }
@@ -81,7 +81,7 @@ class VersionParser
 
         foreach (preg_split('/[\.\-]/', $version) as $element) {
             if (ctype_digit($element)) {
-                if(count($numbers) < 3) {
+                if (count($numbers) < 4) {
                     $numbers[] = (int) $element;
                 } else {
                     $pre[] = (int) $element;
@@ -89,6 +89,9 @@ class VersionParser
             } else {
                 $pre[] = $element;
             }
+        }
+        if (empty($numbers)) {
+            throw new SemverException(sprintf('No usable version numbers detected in "%s"', $version));
         }
         return [
             self::VERSION => $numbers,

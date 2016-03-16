@@ -70,7 +70,7 @@ class Primitive
     {
         if (array_key_exists($operator, self::$inversions)) {
             return new self($version, $operator, false);
-        } elseif (false !== ($inverted = array_search($operator, self::$inversions))) {
+        } elseif (false !== ($inverted = array_search($operator, self::$inversions, true))) {
             return new self($version, $inverted, true);
         } elseif (self::OPERATOR_NE_ALT === $operator) {
             return new self($version, self::OPERATOR_EQ, true);

@@ -92,7 +92,7 @@ class RangeParser
         $qualifier = count($parts) > 4 ? $parts[4] : '';
 
         // Redirect leading wildcard into the universal wildcard primitive right away
-        if($partial[0] === '*') {
+        if ($partial[0] === '*') {
             return [Primitive::getWildcard()];
         }
         return self::processNormalizedSimpleRange($operator, $partial, $qualifier);
@@ -101,7 +101,7 @@ class RangeParser
     private static function processNormalizedSimpleRange($operator, $partial, $qualifier)
     {
         $xrs = explode('.', $partial);
-        if ($wildcard = array_search('*', $xrs)) {
+        if ($wildcard = array_search('*', $xrs, true)) {
             $xrs = array_slice($xrs, 0, $wildcard);
         } elseif (count($xrs) < 3) {
             $wildcard = count($xrs);
