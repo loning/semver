@@ -90,16 +90,14 @@ class RangeTest extends \PHPUnit_Framework_TestCase
 
     public function rangeDataProvider()
     {
-        $result = [];
         $data = json_decode(file_get_contents(__DIR__ . '/Data/Ranges/RangeMatches.json'), JSON_OBJECT_AS_ARRAY);
         foreach ($data as $range => $tests) {
             foreach ($tests as $type => $versions) {
                 foreach ($versions as $version) {
-                    $result["$range $type $version"] = [$range, $type, Version::fromString($version)];
+                    yield "$range $type $version" => [$range, $type, Version::fromString($version)];
                 }
             }
         }
-        return $result;
     }
 
     /**
@@ -116,9 +114,8 @@ class RangeTest extends \PHPUnit_Framework_TestCase
     public function normalizedRangeDataProvider()
     {
         $data = json_decode(file_get_contents(__DIR__ . '/Data/Ranges/NormalizedRanges.json'), JSON_OBJECT_AS_ARRAY);
-        foreach ($data as $key => &$value) {
-            $value = [$key, $value];
+        foreach ($data as $key => $value) {
+            yield $value => [$key, $value];
         }
-        return $data;
     }
 }
