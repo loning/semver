@@ -35,7 +35,9 @@ abstract class AbstractVersionCollection implements \ArrayAccess, \Countable, \I
      */
     protected function getVersionArray()
     {
-        return array_map(function ($item) { return $item[0]; }, $this->data);
+        return array_map(function ($item) {
+            return $item[0];
+        }, $this->data);
     }
 
     /**
@@ -43,6 +45,8 @@ abstract class AbstractVersionCollection implements \ArrayAccess, \Countable, \I
      */
     protected function getVersionStringArray()
     {
-        return array_map(function ($item) { return (string) $item[0]; }, $this->data);
+        return array_map(function ($item) {
+            return (string) $item[0];
+        }, $this->data);
     }
 }

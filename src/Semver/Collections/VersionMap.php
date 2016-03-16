@@ -72,7 +72,9 @@ class VersionMap extends AbstractVersionCollection
      */
     public function getValues()
     {
-        return array_map(function ($item) { return $item[1]; }, array_values($this->data));
+        return array_map(function ($item) {
+            return $item[1];
+        }, array_values($this->data));
     }
 
     /**

@@ -51,7 +51,9 @@ class Range
      */
     public function getNormalizedString()
     {
-        return implode(' || ', array_map(function ($and) { return implode(' ', $and); }, $this->elements));
+        return implode(' || ', array_map(function ($and) {
+            return implode(' ', $and);
+        }, $this->elements));
     }
 
     /**
