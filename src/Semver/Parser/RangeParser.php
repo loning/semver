@@ -85,7 +85,7 @@ class RangeParser
     public static function parseSimpleRange($simple)
     {
         if (!preg_match(self::REGEX_RANGE, $simple ?: '*', $parts)) {
-            throw new SemverException(sprintf('Could not parse simple constraint "%s"', $simple));
+            throw SemverException::format('Could not parse simple constraint "%s"', $simple);
         }
         $operator = $parts[1] ?: '=';
         $partial = str_replace(['*', 'x', 'X'], '*', $parts[3]);
@@ -140,7 +140,7 @@ class RangeParser
         }
 
         // @codeCoverageIgnoreStart
-        throw new SemverException(sprintf('Unknown operator "%s"', $operator));
+        throw SemverException::format('Unknown operator "%s"', $operator);
         // @codeCoverageIgnoreEnd
     }
 

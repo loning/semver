@@ -52,18 +52,18 @@ class VersionParser
     {
         // Extract into separate parts
         if (!preg_match(self::REGEX_SEMVER2, $version, $matches)) {
-            throw new SemverException(sprintf('Could not parse Semver2 string "%s"', $version));
+            throw SemverException::format('Could not parse Semver2 string "%s"', $version);
         }
 
         // Parse version part
         $numbers = array_pad(array_map(function ($element) {
             if (!ctype_digit($element)) {
-                throw new SemverException(sprintf('"%s" is not a valid version element', $element));
+                throw SemverException::format('"%s" is not a valid version element', $element);
             }
             return (int) $element;
         }, explode('.', $matches[1])), 3, 0);
         if (count($numbers) > 3) {
-            throw new SemverException(sprintf('Semver string "%s" contains %d version numbers, should be 3 at most', $version, count($numbers)));
+            throw SemverException::format('Semver string "%s" contains %d version numbers, should be 3 at most', $version, count($numbers));
         }
 
         // Parse prerelease and build parts
@@ -91,7 +91,7 @@ class VersionParser
             }
         }
         if (empty($numbers)) {
-            throw new SemverException(sprintf('No usable version numbers detected in "%s"', $version));
+            throw SemverException::format('No usable version numbers detected in "%s"', $version);
         }
         return [
             self::VERSION => $numbers,

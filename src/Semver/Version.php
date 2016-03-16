@@ -57,7 +57,7 @@ class Version
             throw end($issues);
         }
         if ($compliance != ($this->compliance = $parsed[VersionParser::COMPLIANCE]) && $compliance) {
-            throw new SemverException(sprintf('Version "%s" is not of required compliance level', $version));
+            throw SemverException::format('Version "%s" is not of required compliance level', $version);
         }
 
         $this->version = $parsed[VersionParser::VERSION];

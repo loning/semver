@@ -17,4 +17,14 @@ namespace Omines\Semver\Exception;
  */
 class SemverException extends \RuntimeException
 {
+    /**
+     * @param string $string
+     * @param mixed ...
+     * @return self
+     */
+    public static function format($string)
+    {
+        $type = get_called_class();
+        return new $type(vsprintf($string, array_slice(func_get_args(), 1)));
+    }
 }

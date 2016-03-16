@@ -75,7 +75,7 @@ class Primitive
         } elseif (self::OPERATOR_NE_ALT === $operator) {
             return new self($version, self::OPERATOR_EQ, true);
         }
-        throw new SemverException(sprintf('Invalid primitive operator "%s%s"', $operator, $version));
+        throw SemverException::format('Invalid primitive operator "%s%s"', $operator, $version);
     }
 
     /**
@@ -105,7 +105,7 @@ class Primitive
                 $result = ($comparison < 0);
                 break;
             default:
-                throw new SemverException(sprintf('Invalid primitive operator "%s"', $this->operator));
+                throw SemverException::format('Invalid primitive operator "%s"', $this->operator);
         }
         return $this->negate xor $result;
     }
