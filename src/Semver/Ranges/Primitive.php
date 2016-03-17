@@ -83,7 +83,7 @@ class Primitive
      */
     public static function getWildcard()
     {
-        return new self(Version::fromString('0'), Primitive::OPERATOR_LT, true);
+        return new self(Version::fromString('0'), self::OPERATOR_LT, true);
     }
 
     /**

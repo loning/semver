@@ -79,6 +79,28 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(Version::fromString('1.2.3')->equals(Version::fromString('0.1.2')));
     }
 
+    public function testLooseVersions()
+    {
+        $first = new Version('0.6.8.4', Version::COMPLIANCE_NONE);
+        $second = new Version('0.6.8.4.rc1', Version::COMPLIANCE_NONE);
+        $third = new Version('0.6.8.4.rc.2', Version::COMPLIANCE_NONE);
+        $fourth = new Version('0.6.8.4.5', Version::COMPLIANCE_NONE);
+        $fifth = new Version('0.6.8.4.5.6', Version::COMPLIANCE_NONE);
+
+        $this->assertGreaterThan(0, $first->compare($second));
+        $this->assertGreaterThan(0, $first->compare($third));
+        $this->assertLessThan(0, $second->compare($first));
+        $this->assertLessThan(0, $third->compare($first));
+        $this->assertLessThan(0, $third->compare($second));
+
+        // Big numbers
+        $this->assertTrue($first->lessThan($fourth));
+        $this->assertTrue($fourth->lessThan($fifth));
+        $this->assertTrue($fourth->greaterThan($first));
+        $this->assertTrue($fifth->greaterThan($fourth));
+        $this->assertTrue($fifth->greaterThan($first));
+    }
+
     /**
      * @expectedException \Omines\Semver\Exception\SemverException
      * @expectedExceptionMessage not of required compliance level

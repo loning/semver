@@ -86,13 +86,14 @@ class VersionParser
 
         foreach (preg_split('/[\.\-]/', $version) as $element) {
             if (ctype_digit($element)) {
-                if (count($numbers) < 4) {
+                if (empty($pre)) {
                     $numbers[] = (int) $element;
                 } else {
                     $pre[] = (int) $element;
                 }
             } else {
                 $pre[] = $element;
+
             }
         }
         if (empty($numbers)) {

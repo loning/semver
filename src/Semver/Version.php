@@ -145,7 +145,7 @@ class Version
         }
         for (; $idx < $thoseNumbers; ++$idx) {
             if ($that->version[$idx]) {
-                return 1;
+                return -1;
             }
         }
         return 0;
