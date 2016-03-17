@@ -47,9 +47,26 @@ class VersionListTest extends \PHPUnit_Framework_TestCase
         $list->sort();
         $this->assertEquals($this->normalizedSorted, $list->getStringValues());
         $this->assertEquals($this->normalizedSorted[5], $list[5]);
+        $list->each(function (Version $version) {
+            /** @var Version $last */
+            static $last;
+            if ($last) {
+                $this->assertTrue($last->lessThan($version));
+            }
+            $last = $version;
+        });
+
         $list->rsort();
         $this->assertEquals($this->normalizedReverse, $list->getStringValues());
         $this->assertEquals($this->normalizedReverse[3], $list[3]);
+        $list->each(function (Version $version) {
+            /** @var Version $last */
+            static $last;
+            if ($last) {
+                $this->assertTrue($last->greaterThanOrEqual($version));
+            }
+            $last = $version;
+        });
 
         // Iterable behaviours
         foreach ($list as $idx => $version) {

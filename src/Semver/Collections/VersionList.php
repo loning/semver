@@ -41,6 +41,16 @@ class VersionList extends AbstractVersionCollection
     }
 
     /**
+     * @param callable $callback
+     */
+    public function each(callable $callable)
+    {
+        foreach ($this as $version) {
+            $callable($version);
+        };
+    }
+
+    /**
      * @return VersionListIterator
      */
     public function getIterator()
