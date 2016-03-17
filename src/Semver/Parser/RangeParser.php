@@ -56,7 +56,7 @@ class RangeParser
         // Split regular simple constraints
         $primitives = [];
         foreach (preg_split('/\s+/', $range) as $simple) {
-            $primitives += self::parseSimpleRange($simple);
+            $primitives = array_merge($primitives, self::parseSimpleRange($simple));
         }
         return $primitives;
     }

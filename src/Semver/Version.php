@@ -51,6 +51,7 @@ class Version
      */
     public function __construct($version = self::DEFAULT_SEMVER, $compliance = self::COMPLIANCE_SEMVER2)
     {
+        $version = (string) $version;
         $this->originalString = $version;
 
         if (!($parsed = VersionParser::parse($version, $issues))) {

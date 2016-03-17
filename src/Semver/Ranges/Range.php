@@ -33,6 +33,7 @@ class Range
      */
     public function __construct($range)
     {
+        $range = (string) $range;
         $this->originalString = $range;
         $this->elements = RangeParser::parseRangeSet($range);
     }

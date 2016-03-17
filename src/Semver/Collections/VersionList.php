@@ -41,7 +41,7 @@ class VersionList extends AbstractVersionCollection
     }
 
     /**
-     * @param callable $callback
+     * @param callable $callable
      */
     public function each(callable $callable)
     {

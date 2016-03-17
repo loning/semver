@@ -108,7 +108,8 @@ class RangeTest extends \PHPUnit_Framework_TestCase
      */
     public function testRangeNormalization($input, $expected)
     {
-        $this->assertEquals($expected, Range::fromString($input));
+        $this->assertEquals($expected, $range = Range::fromString($input));
+        $this->assertEquals($expected, Range::fromString($range)->getNormalizedString());
     }
 
     public function normalizedRangeDataProvider()
