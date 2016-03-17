@@ -162,8 +162,10 @@ class Version
             return count($that->prerelease) - count($this->prerelease);
         }
         for ($idx = 0; $idx < $leastPrereleases; ++$idx) {
-            if ($this->prerelease[$idx] !== $that->prerelease[$idx]) {
-                return strcmp($this->prerelease[$idx], $that->prerelease[$idx]);
+            $left = &$this->prerelease[$idx];
+            $right = &$that->prerelease[$idx];
+            if ($left !== $right) {
+                return is_int($left) ? $left - $right : strcmp($left, $right);
             }
         }
         return count($this->prerelease) - count($that->prerelease);
