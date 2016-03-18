@@ -1,7 +1,7 @@
 # Semver
 
 [![Build Status](https://travis-ci.org/omines/semver.svg?branch=master)](https://travis-ci.org/omines/semver)
-[![Code Coverage](https://scrutinizer-ci.com/g/omines/semver/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/omines/semver/?branch=master)
+[![Scrutinizer Coverage](https://img.shields.io/scrutinizer/coverage/g/omines/semver.svg)](https://scrutinizer-ci.com/g/omines/semver/?branch=master)
 [![Scrutinizer](https://img.shields.io/scrutinizer/g/omines/semver.svg)](https://scrutinizer-ci.com/g/omines/semver/?branch=master)
 [![SensioLabs Insight](https://img.shields.io/sensiolabs/i/6bf49b9f-c9fd-456f-962e-6238e9f5e61e.svg)](https://insight.sensiolabs.com/projects/6bf49b9f-c9fd-456f-962e-6238e9f5e61e)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/omines/semver/master/LICENSE)
