@@ -44,11 +44,11 @@ class VersionMap extends AbstractVersionCollection
     }
 
     /**
-     * @param callable $callable Callback that will be invoked with (&$data, $version) parameters.
+     * @param callable $callable Callback that will be invoked with ($data, $version) parameters.
      */
     public function each(callable $callable)
     {
-        foreach ($this as $version => &$data) {
+        foreach ($this as $version => $data) {
             $callable($data, $version);
         };
     }

@@ -88,9 +88,9 @@ class VersionMapTest extends \PHPUnit_Framework_TestCase
         $map['3.4'] = 6;
 
         $test = [];
-        foreach ($map as $key => $value) {
+        $map->each(function ($value) use (&$test) {
             $test[] = $value;
-        }
+        });
         $this->assertSame([1, 3, 4, 6], $test);
     }
 

@@ -32,6 +32,7 @@ abstract class AbstractVersionCollection implements \ArrayAccess, \Countable, \I
 
     /**
      * @param callable $callable
+     * @return void
      */
     abstract public function each(callable $callable);
 
