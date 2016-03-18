@@ -60,24 +60,28 @@ class VersionParser
             throw SemverException::format('Could not parse Semver2 string "%s"', $version);
         }
 
+        // Parse prerelease and build parts
+        return [
+            self::COMPLIANCE => Version::COMPLIANCE_SEMVER2,
+            self::VERSION => self::splitSemverNumbers($matches[1]),
+            self::PRERELEASE => isset($matches[3]) ?  self::splitMetadata($matches[3]) : [],
+            self::BUILD => isset($matches[5]) ? self::splitMetadata($matches[5]) : [],
+        ];
+    }
+
+    private static function splitSemverNumbers($string)
+    {
         // Parse version part
         $numbers = array_pad(array_map(function ($element) {
             if (!ctype_digit($element)) {
                 throw SemverException::format('"%s" is not a valid version element', $element);
             }
             return (int) $element;
-        }, explode('.', $matches[1])), 3, 0);
+        }, explode('.', $string)), 3, 0);
         if (count($numbers) > 3) {
-            throw SemverException::format('Semver string "%s" contains %d version numbers, should be 3 at most', $version, count($numbers));
+            throw SemverException::format('Semver string "%s" contains %d version numbers, should be 3 at most', $string, count($numbers));
         }
-
-        // Parse prerelease and build parts
-        return [
-            self::VERSION => $numbers,
-            self::PRERELEASE => isset($matches[3]) ?  self::splitMetadata($matches[3]) : [],
-            self::BUILD => isset($matches[5]) ? self::splitMetadata($matches[5]) : [],
-            self::COMPLIANCE => Version::COMPLIANCE_SEMVER2,
-        ];
+        return $numbers;
     }
 
     public static function parseLoose($version)
@@ -100,10 +104,10 @@ class VersionParser
             throw SemverException::format('No usable version numbers detected in "%s"', $version);
         }
         return [
+            self::COMPLIANCE => Version::COMPLIANCE_NONE,
             self::VERSION => $numbers,
             self::PRERELEASE => $pre,
             self::BUILD => $build,
-            self::COMPLIANCE => Version::COMPLIANCE_NONE,
         ];
     }
 
