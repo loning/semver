@@ -71,6 +71,7 @@ $map = new VersionMap([
 ]);
 $map[$second] = 'Package 2';
 foreach ($map as $key => $value) { ... }    // $key instanceof Version
+$map->each($closure);                       // calls closure with every (&$value, $key)
 ```
 If errors occur a `SemverException` is thrown.
 

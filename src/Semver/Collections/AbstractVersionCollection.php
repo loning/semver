@@ -31,6 +31,11 @@ abstract class AbstractVersionCollection implements \ArrayAccess, \Countable, \I
     }
 
     /**
+     * @param callable $callable
+     */
+    abstract public function each(callable $callable);
+
+    /**
      * @return Version[] A standard PHP array of versions.
      */
     protected function getVersionArray()
