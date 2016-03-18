@@ -9,15 +9,9 @@
 Semantic Versioning implementation for PHP including constraints, filters, sorting and iterable map. Conforms to Semver
 specification [2.0.0](http://semver.org/spec/v2.0.0.html) but also support loose parsing of non-compliant but similar versioning systems.
 
-## To-do
-
-This library is not yet feature complete and still under active development.
-
- * Port all unit tests from node's implementation to ensure identical operation
- * Add stability support
- * Add lossy parser for non-Semver compliant version strings
- * Add filters for stability and ranges to iterators
- * Add extra collection functionality for trimming by filters
+All core features like the parsing and processing of versions and ranges are implemented and 100% unit tested, but the
+library is not yet feature complete and still under active development. Visit the [open issues](https://github.com/omines/semver/issues)
+to see what's on the list before going 1.0.0.
 
 ## Installation
 
@@ -69,6 +63,7 @@ $list[1] = $first;
 $list->sort();
 $list[1] == $second;                        // true
 foreach ($list as $version) { ... }         // $version instanceof Version
+$list->each($closure);                      // calls closure with every element
 
 // Map
 $map = new VersionMap([

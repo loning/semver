@@ -14,4 +14,4 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - VersionList encapsulation of a regular array with Semver values
 - Range implementation with all common operators
 
-[Unreleased]: https://github.com/omines/directadmin/compare/v0.1.2...master
+[Unreleased]: https://github.com/omines/semver/compare/v0.1.0...master
