@@ -28,6 +28,9 @@ class RangeParser
     const OPERATOR_CARET = '^';
     const OPERATOR_TILDE = '~';
 
+    /** @var callable[] */
+    private static $generators;
+
     /**
      * @param string $range
      * @return Primitive[][] Disjunctive collection of conjunctive collections of primitives.
@@ -115,19 +118,11 @@ class RangeParser
 
     private static function generativePrimitives($operator, $data)
     {
-        static $generators = [
-            self::OPERATOR_CARET => [self::class, 'primitivesFromCaret'],
-            self::OPERATOR_TILDE => [self::class, 'primitivesFromTilde'],
-            Primitive::OPERATOR_GE => [self::class, 'primitivesFromGE'],
-            Primitive::OPERATOR_LT => [self::class, 'primitivesFromLT'],
-            Primitive::OPERATOR_GT => [self::class, 'primitivesFromGT'],
-            Primitive::OPERATOR_LE => [self::class, 'primitivesFromLE'],
-            Primitive::OPERATOR_EQ => [self::class, 'primitivesFromEquals'],
-            Primitive::OPERATOR_NE => [self::class, 'primitivesFromNotEquals'],
-            Primitive::OPERATOR_NE_ALT => [self::class, 'primitivesFromNotEquals'],
-        ];
-        if (is_callable($generators[$operator])) {
-            return forward_static_call_array($generators[$operator], $data);
+        if (!self::$generators) {
+            self::initGenerators();
+        }
+        if (is_callable(self::$generators[$operator])) {
+            return forward_static_call_array(self::$generators[$operator], $data);
         }
 
         // @codeCoverageIgnoreStart
@@ -135,57 +130,49 @@ class RangeParser
         // @codeCoverageIgnoreEnd
     }
 
-    private static function primitivesFromGT(Version $lbound, array $nrs, array $ubound)
+    private static function initGenerators()
     {
-        return [new Primitive($ubound ? implode('.', $ubound) : $lbound, Primitive::OPERATOR_GT)];
-    }
-
-    private static function primitivesFromGE(Version $lbound)
-    {
-        return [new Primitive($lbound, Primitive::OPERATOR_LT, true)];
-    }
-
-    private static function primitivesFromLT(Version $lbound)
-    {
-        return [new Primitive($lbound, Primitive::OPERATOR_LT)];
-    }
-
-    private static function primitivesFromLE(Version $lbound, array $nrs, array $ubound)
-    {
-        return [new Primitive($ubound ? implode('.', $ubound) : $lbound, Primitive::OPERATOR_GT, true)];
-    }
-
-    private static function primitivesFromEquals(Version $lbound, array $nrs, array $ubound)
-    {
-        return empty($ubound) ? [new Primitive($lbound, Primitive::OPERATOR_EQ)] : self::between($lbound, implode('.', $ubound));
-    }
-
-    private static function primitivesFromNotEquals(Version $lbound, array $nrs, array $ubound)
-    {
-        if ($ubound) {
-            throw new SemverException('Inequality operator requires exact version');
-        }
-        return [new Primitive($lbound, Primitive::OPERATOR_EQ, true)];
-    }
-
-    private static function primitivesFromCaret(Version $lbound, array $nrs, array $ubound)
-    {
-        $realbound = $lbound->getNextSignificant();
-        if ($ubound) {
-            $realbound = Version::highest($realbound, Version::fromString(implode('.', $ubound)));
-        }
-        return self::between($lbound, $realbound);
-    }
-
-    private static function primitivesFromTilde(Version $lbound, array $nrs, array $ubound)
-    {
-        if (count($nrs) == 1) {
-            $upper = Version::fromString($nrs[0]+1);
-        } else {
-            ++$nrs[1];
-            $upper = Version::fromString(implode('.', array_slice($nrs, 0, 2)));
-        }
-        return self::between($lbound, $ubound ? Version::highest($upper, Version::fromString(implode('.', $ubound))) : $upper);
+        $notEquals = function (Version $lbound, array $nrs, array $ubound) {
+            if ($ubound) {
+                throw new SemverException('Inequality operator requires exact version');
+            }
+            return [new Primitive($lbound, Primitive::OPERATOR_EQ, true)];
+        };
+        self::$generators = [
+            self::OPERATOR_CARET => function (Version $lbound, array $nrs, array $ubound) {
+                $realbound = $lbound->getNextSignificant();
+                if ($ubound) {
+                    $realbound = Version::highest($realbound, Version::fromString(implode('.', $ubound)));
+                }
+                return self::between($lbound, $realbound);
+            },
+            self::OPERATOR_TILDE => function (Version $lbound, array $nrs, array $ubound) {
+                if (count($nrs) == 1) {
+                    $upper = Version::fromString($nrs[0] + 1);
+                } else {
+                    ++$nrs[1];
+                    $upper = Version::fromString(implode('.', array_slice($nrs, 0, 2)));
+                }
+                return self::between($lbound, $ubound ? Version::highest($upper, Version::fromString(implode('.', $ubound))) : $upper);
+            },
+            Primitive::OPERATOR_GE => function (Version $lbound) {
+                return [new Primitive($lbound, Primitive::OPERATOR_LT, true)];
+            },
+            Primitive::OPERATOR_LT => function (Version $lbound) {
+                return [new Primitive($lbound, Primitive::OPERATOR_LT)];
+            },
+            Primitive::OPERATOR_GT => function (Version $lbound, array $nrs, array $ubound) {
+                return [new Primitive($ubound ? implode('.', $ubound) : $lbound, Primitive::OPERATOR_GT)];
+            },
+            Primitive::OPERATOR_LE => function (Version $lbound, array $nrs, array $ubound) {
+                return [new Primitive($ubound ? implode('.', $ubound) : $lbound, Primitive::OPERATOR_GT, true)];
+            },
+            Primitive::OPERATOR_EQ => function (Version $lbound, array $nrs, array $ubound) {
+                return empty($ubound) ? [new Primitive($lbound, Primitive::OPERATOR_EQ)] : self::between($lbound, implode('.', $ubound));
+            },
+            Primitive::OPERATOR_NE => $notEquals,
+            Primitive::OPERATOR_NE_ALT => $notEquals,
+        ];
     }
 
     /**
