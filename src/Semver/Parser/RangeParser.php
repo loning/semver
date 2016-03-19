@@ -98,10 +98,17 @@ class RangeParser
         if ($partial[0] === '*') {
             return [Primitive::getWildcard()];
         }
-        return self::generativePrimitives($operator, self::processXrs($partial, $qualifier));
+        return PrimitiveGenerator::getInstance()->generate($operator, self::expandXRs($partial, $qualifier));
     }
 
-    private static function processXrs($partial, $qualifier)
+    /**
+     * Splits a single partial into bounds if wildcards are included.
+     *
+     * @param string $partial
+     * @param string $qualifier
+     * @return array
+     */
+    private static function expandXRs($partial, $qualifier)
     {
         $xrs = explode('.', $partial);
         if ($wildcard = array_search('*', $xrs, true)) {
@@ -114,35 +121,5 @@ class RangeParser
         $low = $high = array_pad($xrs, 3, 0);
         ++$high[$wildcard - 1];
         return [Version::fromString(implode('.', $low) . $qualifier), $high, $xrs];
-    }
-
-    private static function generativePrimitives($operator, $data)
-    {
-        if (!isset(self::$generators)) {
-            self::initGenerators();
-        }
-        if (is_callable(self::$generators[$operator])) {
-            return forward_static_call_array(self::$generators[$operator], $data);
-        }
-
-        // @codeCoverageIgnoreStart
-        throw SemverException::format('Unknown operator "%s"', $operator);
-        // @codeCoverageIgnoreEnd
-    }
-
-    private static function initGenerators()
-    {
-        $generatorClass = PrimitiveGenerator::class;
-        self::$generators = [
-            self::OPERATOR_CARET => [$generatorClass, 'generateCaretPrimitives'],
-            self::OPERATOR_TILDE => [$generatorClass, 'generateTildePrimitives'],
-            Primitive::OPERATOR_GT => [$generatorClass, 'generateGreaterThanPrimitives'],
-            Primitive::OPERATOR_GE => [$generatorClass, 'generateGreaterThanOrEqualPrimitives'],
-            Primitive::OPERATOR_LT => [$generatorClass, 'generateLessThanPrimitives'],
-            Primitive::OPERATOR_LE => [$generatorClass, 'generateLessThanOrEqualPrimitives'],
-            Primitive::OPERATOR_EQ => [$generatorClass, 'generateEqualsPrimitives'],
-            Primitive::OPERATOR_NE => [$generatorClass, 'generateNotEqualsPrimitives'],
-            Primitive::OPERATOR_NE_ALT => [$generatorClass, 'generateNotEqualsPrimitives'],
-        ];
     }
 }
