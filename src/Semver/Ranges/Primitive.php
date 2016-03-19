@@ -56,26 +56,13 @@ class Primitive
      */
     public function __construct($version, $operator, $negate = false)
     {
+        if (!array_key_exists($operator, self::$inversions)) {
+            throw SemverException::format('Invalid primitive operator "%s"', $operator);
+        }
+
         $this->version = $version instanceof Version ? $version : Version::fromString($version);
         $this->operator = $operator;
         $this->negate = (bool) $negate;
-    }
-
-    /**
-     * @param string|Version $version
-     * @param string $operator One of the simple or negated operators.
-     * @return Primitive
-     */
-    public static function fromParts($version, $operator)
-    {
-        if (array_key_exists($operator, self::$inversions)) {
-            return new self($version, $operator, false);
-        } elseif (false !== ($inverted = array_search($operator, self::$inversions, true))) {
-            return new self($version, $inverted, true);
-        } elseif (self::OPERATOR_NE_ALT === $operator) {
-            return new self($version, self::OPERATOR_EQ, true);
-        }
-        throw SemverException::format('Invalid primitive operator "%s%s"', $operator, $version);
     }
 
     /**
@@ -96,18 +83,15 @@ class Primitive
         $comparison = $version->compare($this->version);
         switch ($this->operator) {
             case self::OPERATOR_EQ:
-                $result = !$comparison;
-                break;
+                return $this->negate xor !$comparison;
             case self::OPERATOR_GT:
-                $result = ($comparison > 0);
-                break;
+                return $this->negate xor ($comparison > 0);
             case self::OPERATOR_LT:
-                $result = ($comparison < 0);
-                break;
-            default:
-                throw SemverException::format('Invalid primitive operator "%s"', $this->operator);
+                return $this->negate xor ($comparison < 0);
         }
-        return $this->negate xor $result;
+        // @codeCoverageIgnoreStart
+        throw SemverException::format('Invalid primitive operator "%s"', $this->operator);
+        // @codeCoverageIgnoreEnd
     }
 
     public function getNormalizedString()

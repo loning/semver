@@ -18,6 +18,8 @@ namespace Omines\Semver\Exception;
 class SemverException extends \RuntimeException
 {
     /**
+     * Utility function for easily formatting exceptions.
+     *
      * @param string $string
      * @param mixed ...
      * @return self

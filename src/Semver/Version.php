@@ -48,6 +48,7 @@ class Version
      *
      * @param string $version
      * @param int|bool $compliance Compliance level, or just false for loose
+     * @throws SemverException in case of any parsing failures
      */
     public function __construct($version = self::DEFAULT_SEMVER, $compliance = self::COMPLIANCE_SEMVER2)
     {
