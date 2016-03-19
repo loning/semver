@@ -21,7 +21,7 @@ use Omines\Semver\Version;
  */
 class PrimitiveGenerator
 {
-    public static function generateCaretPrimitives(Version $lbound, array $nrs, array $ubound)
+    public static function generateCaretPrimitives(Version $lbound, array $ubound)
     {
         $realbound = $lbound->getNextSignificant();
         if (!empty($ubound)) {
@@ -30,7 +30,7 @@ class PrimitiveGenerator
         return self::between($lbound, $realbound);
     }
 
-    public static function generateTildePrimitives(Version $lbound, array $nrs, array $ubound)
+    public static function generateTildePrimitives(Version $lbound, array $ubound, array $nrs)
     {
         if (count($nrs) == 1) {
             $upper = Version::fromString($nrs[0] + 1);
@@ -41,36 +41,34 @@ class PrimitiveGenerator
         return self::between($lbound, $ubound ? Version::highest($upper, Version::fromString(implode('.', $ubound))) : $upper);
     }
 
-    public static function generateGreaterThanPrimitives(Version $lbound, array $nrs, array $ubound)
+    public static function generateGreaterThanPrimitives(Version $lbound, array $ubound)
     {
         return [new Primitive($ubound ? implode('.', $ubound) : $lbound, Primitive::OPERATOR_GT)];
     }
 
-    public static function generateGreaterThanOrEqualPrimitives(Version $lbound, array $nrs, array $ubound)
+    public static function generateGreaterThanOrEqualPrimitives(Version $lbound)
     {
         return [new Primitive($lbound, Primitive::OPERATOR_LT, true)];
     }
 
-    public static function generateLessThanPrimitives(Version $lbound, array $nrs, array $ubound)
+    public static function generateLessThanPrimitives(Version $lbound)
     {
         return [new Primitive($lbound, Primitive::OPERATOR_LT)];
     }
 
-    public static function generateLessThanOrEqualPrimitives(Version $lbound, array $nrs, array $ubound)
+    public static function generateLessThanOrEqualPrimitives(Version $lbound, array $ubound)
     {
         return [new Primitive($ubound ? implode('.', $ubound) : $lbound, Primitive::OPERATOR_GT, true)];
     }
 
-
-
-    public static function generateEqualsPrimitives(Version $lbound, array $nrs, array $ubound)
+    public static function generateEqualsPrimitives(Version $lbound, array $ubound)
     {
         return empty($ubound) ? [new Primitive($lbound, Primitive::OPERATOR_EQ)] : self::between($lbound, implode('.', $ubound));
     }
 
-    public static function generateNotEqualsPrimitives(Version $lbound, array $nrs, array $ubound)
+    public static function generateNotEqualsPrimitives(Version $lbound, array $ubound)
     {
-        if ($ubound) {
+        if (!empty($ubound)) {
             throw new SemverException('Inequality operator requires exact version');
         }
         return [new Primitive($lbound, Primitive::OPERATOR_EQ, true)];

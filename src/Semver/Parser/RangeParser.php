@@ -109,11 +109,11 @@ class RangeParser
         } elseif (count($xrs) < 3) {
             $wildcard = count($xrs);
         } else {
-            return [Version::fromString($partial . $qualifier), $xrs, []];
+            return [Version::fromString($partial . $qualifier), [], $xrs];
         }
         $low = $high = array_pad($xrs, 3, 0);
         ++$high[$wildcard - 1];
-        return [Version::fromString(implode('.', $low) . $qualifier), $xrs, $high];
+        return [Version::fromString(implode('.', $low) . $qualifier), $high, $xrs];
     }
 
     private static function generativePrimitives($operator, $data)
