@@ -80,14 +80,13 @@ class Primitive
     public function satisfiedBy($version)
     {
         $version = $version instanceof Version ? $version : Version::fromString($version);
-        $comparison = $version->compare($this->version);
         switch ($this->operator) {
             case self::OPERATOR_EQ:
-                return $this->negate xor !$comparison;
+                return $this->negate xor $version->equals($this->version);
             case self::OPERATOR_GT:
-                return $this->negate xor ($comparison > 0);
+                return $this->negate xor $version->greaterThan($this->version);
             case self::OPERATOR_LT:
-                return $this->negate xor ($comparison < 0);
+                return $this->negate xor $version->lessThan($this->version);
         }
         // @codeCoverageIgnoreStart
         throw SemverException::format('Invalid primitive operator "%s"', $this->operator);
