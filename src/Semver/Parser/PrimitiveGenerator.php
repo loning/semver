@@ -26,7 +26,7 @@ class PrimitiveGenerator
 
     private $generators;
 
-    private function __construct()
+    protected function __construct()
     {
        $this->generators = [
             RangeParser::OPERATOR_CARET => [$this, 'generateCaretPrimitives'],

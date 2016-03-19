@@ -28,9 +28,6 @@ class RangeParser
     const OPERATOR_CARET = '^';
     const OPERATOR_TILDE = '~';
 
-    /** @var array<string|integer,object<Closure>> */
-    private static $generators;
-
     /**
      * @param string $range
      * @return Primitive[][] Disjunctive collection of conjunctive collections of primitives.
