@@ -22,13 +22,13 @@ use Omines\Semver\Version;
 class RangeParser
 {
     const REGEX_HYPHEN = '#^\s*([^\s]+)\s+\-\s+([^\s]+)\s*$#';
-    const REGEX_RANGE = '#^\s*(\^|~|!=|<>|([><]?=?))([\dxX\*\.]+)(\-([a-z0-9\.\-]+))?\s*$#i';
+    const REGEX_RANGE = '#^\s*(\^|~|!=|<>|([><]?=?))([\dxX\*\.]+)((\-([a-z0-9\.\-]+))|)\s*$#i';
     const REGEX_SPLIT_RANGESET = '#\s*\|\|?\s*#';
 
     const OPERATOR_CARET = '^';
     const OPERATOR_TILDE = '~';
 
-    /** @var callable[] */
+    /** @var array<string|integer,object<Closure>> */
     private static $generators;
 
     /**
@@ -78,7 +78,7 @@ class RangeParser
         } else {
             $ubound = new Primitive($upper, Primitive::OPERATOR_GT, true);
         }
-        return [ new Primitive($lower, Primitive::OPERATOR_LT, true), $ubound ];
+        return [new Primitive($lower, Primitive::OPERATOR_LT, true), $ubound];
     }
 
     /**
@@ -92,7 +92,7 @@ class RangeParser
         }
         $operator = $parts[1] ?: '=';
         $partial = str_replace(['*', 'x', 'X'], '*', $parts[3]);
-        $qualifier = count($parts) > 4 ? $parts[4] : '';
+        $qualifier = $parts[4];
 
         // Redirect leading wildcard into the universal wildcard primitive right away
         if ($partial[0] === '*') {
@@ -118,7 +118,7 @@ class RangeParser
 
     private static function generativePrimitives($operator, $data)
     {
-        if (!self::$generators) {
+        if (!isset(self::$generators)) {
             self::initGenerators();
         }
         if (is_callable(self::$generators[$operator])) {
@@ -132,59 +132,17 @@ class RangeParser
 
     private static function initGenerators()
     {
-        $notEquals = function (Version $lbound, array $nrs, array $ubound) {
-            if ($ubound) {
-                throw new SemverException('Inequality operator requires exact version');
-            }
-            return [new Primitive($lbound, Primitive::OPERATOR_EQ, true)];
-        };
+        $generatorClass = PrimitiveGenerator::class;
         self::$generators = [
-            self::OPERATOR_CARET => function (Version $lbound, array $nrs, array $ubound) {
-                $realbound = $lbound->getNextSignificant();
-                if ($ubound) {
-                    $realbound = Version::highest($realbound, Version::fromString(implode('.', $ubound)));
-                }
-                return self::between($lbound, $realbound);
-            },
-            self::OPERATOR_TILDE => function (Version $lbound, array $nrs, array $ubound) {
-                if (count($nrs) == 1) {
-                    $upper = Version::fromString($nrs[0] + 1);
-                } else {
-                    ++$nrs[1];
-                    $upper = Version::fromString(implode('.', array_slice($nrs, 0, 2)));
-                }
-                return self::between($lbound, $ubound ? Version::highest($upper, Version::fromString(implode('.', $ubound))) : $upper);
-            },
-            Primitive::OPERATOR_GE => function (Version $lbound) {
-                return [new Primitive($lbound, Primitive::OPERATOR_LT, true)];
-            },
-            Primitive::OPERATOR_LT => function (Version $lbound) {
-                return [new Primitive($lbound, Primitive::OPERATOR_LT)];
-            },
-            Primitive::OPERATOR_GT => function (Version $lbound, array $nrs, array $ubound) {
-                return [new Primitive($ubound ? implode('.', $ubound) : $lbound, Primitive::OPERATOR_GT)];
-            },
-            Primitive::OPERATOR_LE => function (Version $lbound, array $nrs, array $ubound) {
-                return [new Primitive($ubound ? implode('.', $ubound) : $lbound, Primitive::OPERATOR_GT, true)];
-            },
-            Primitive::OPERATOR_EQ => function (Version $lbound, array $nrs, array $ubound) {
-                return empty($ubound) ? [new Primitive($lbound, Primitive::OPERATOR_EQ)] : self::between($lbound, implode('.', $ubound));
-            },
-            Primitive::OPERATOR_NE => $notEquals,
-            Primitive::OPERATOR_NE_ALT => $notEquals,
-        ];
-    }
-
-    /**
-     * @param Version|string $lower
-     * @param Version|string $upper
-     * @return Primitive[] Two primitives marking the non-inclusive range.
-     */
-    private static function between($lower, $upper)
-    {
-        return [
-            new Primitive($lower, Primitive::OPERATOR_LT, true),
-            new Primitive($upper, Primitive::OPERATOR_LT),
+            self::OPERATOR_CARET => [$generatorClass, 'generateCaretPrimitives'],
+            self::OPERATOR_TILDE => [$generatorClass, 'generateTildePrimitives'],
+            Primitive::OPERATOR_GT => [$generatorClass, 'generateGreaterThanPrimitives'],
+            Primitive::OPERATOR_GE => [$generatorClass, 'generateGreaterThanOrEqualPrimitives'],
+            Primitive::OPERATOR_LT => [$generatorClass, 'generateLessThanPrimitives'],
+            Primitive::OPERATOR_LE => [$generatorClass, 'generateLessThanOrEqualPrimitives'],
+            Primitive::OPERATOR_EQ => [$generatorClass, 'generateEqualsPrimitives'],
+            Primitive::OPERATOR_NE => [$generatorClass, 'generateNotEqualsPrimitives'],
+            Primitive::OPERATOR_NE_ALT => [$generatorClass, 'generateNotEqualsPrimitives'],
         ];
     }
 }
