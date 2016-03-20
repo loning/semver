@@ -29,11 +29,11 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($sample, (string) $semver);
 
         // Separate components
-        $this->assertSame(1, $semver->getMajorVersion());
-        $this->assertSame(2, $semver->getMinorVersion());
-        $this->assertSame(3, $semver->getPatchVersion());
-        $this->assertSame('beta.1', $semver->getPrereleaseString());
-        $this->assertSame('build.25122015.ci', $semver->getBuildString());
+        $this->assertSame(1, $semver->getMajor());
+        $this->assertSame(2, $semver->getMinor());
+        $this->assertSame(3, $semver->getPatch());
+        $this->assertSame('beta.1', $semver->getPrerelease());
+        $this->assertSame('build.25122015.ci', $semver->getBuild());
 
         // Test strings and numerics are handled correctly
         $this->assertSame('beta', $semver->getPrereleaseElement(0));

@@ -261,7 +261,7 @@ class Version
     /**
      * @return string
      */
-    public function getBuildString()
+    public function getBuild()
     {
         return implode('.', $this->build);
     }
@@ -277,7 +277,7 @@ class Version
     /**
      * @return int
      */
-    public function getMajorVersion()
+    public function getMajor()
     {
         return $this->version[self::INDEX_MAJOR];
     }
@@ -285,7 +285,7 @@ class Version
     /**
      * @return int
      */
-    public function getMinorVersion()
+    public function getMinor()
     {
         return $this->version[self::INDEX_MINOR];
     }
@@ -295,12 +295,12 @@ class Version
      */
     public function getNormalizedString()
     {
-        $result = $this->getVersionNumber();
+        $result = $this->getVersion();
         if (!empty($this->prerelease)) {
-            $result .= '-' . implode('.', $this->prerelease);
+            $result .= '-' . $this->getPrerelease();
         }
         if (!empty($this->build)) {
-            $result .= '+' . implode('.', $this->build);
+            $result .= '+' . $this->getBuild();
         }
 
         return $result;
@@ -309,7 +309,7 @@ class Version
     /**
      * @return int
      */
-    public function getPatchVersion()
+    public function getPatch()
     {
         return $this->version[self::INDEX_PATCH];
     }
@@ -327,7 +327,7 @@ class Version
     /**
      * @return string
      */
-    public function getPrereleaseString()
+    public function getPrerelease()
     {
         return implode('.', $this->prerelease);
     }
@@ -335,7 +335,7 @@ class Version
     /**
      * @return string
      */
-    public function getVersionNumber()
+    public function getVersion()
     {
         return implode('.', $this->version);
     }
