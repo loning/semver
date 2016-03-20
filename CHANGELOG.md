@@ -4,8 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
-- Collections support `each($closure)`.
-- Loose version parser.
+- Increment functionality on Version
+- Collections support `each($closure)`
+- Loose version parser
+
+### Changed
+- *BREAKING*: Many public API calls reorganized
 
 ## 0.1.0 - 2016-03-14
 ### Added

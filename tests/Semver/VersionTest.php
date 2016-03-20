@@ -10,6 +10,7 @@
 
 namespace Omines\Semver\Tests;
 
+use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Version;
 
 /**
@@ -77,6 +78,25 @@ class VersionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(Version::fromString('1')->equals(Version::fromString('1.0.0+build')));
         $this->assertFalse(Version::fromString('1.2.3')->equals(Version::fromString('0.1.2')));
+    }
+
+    public function testIncrement()
+    {
+        $version = new Version('0.0.1-alpha+build');
+        $this->assertEquals('0.0.2', $version->increment(Version::INDEX_PATCH));
+        $this->assertEquals('0.1.0-rc.1', $version->increment(Version::INDEX_MINOR, 'rc.1'));
+        $this->assertEquals('0.1.1+test', $version->increment(Version::INDEX_PATCH, null, 'test'));
+        $this->assertEquals('1.0.0-rc.2+test.3', $version->increment(Version::INDEX_MAJOR, ['rc', 2], ['test', 3]));
+        $this->assertEquals('1.0.1', $version->increment(Version::INDEX_PATCH));
+    }
+
+    /**
+     * @expectedException \Omines\Semver\Exception\SemverException
+     * @expectedExceptionMessage Index 5 does not exist in version
+     */
+    public function testFailingIncrement()
+    {
+        Version::fromString('0.1.2')->increment(5);
     }
 
     public function testLooseVersions()

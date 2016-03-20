@@ -195,6 +195,28 @@ class Version
     }
 
     /**
+     * Increases the given version number part, resetting those after to 0.
+     *
+     * @param int $index
+     * @param string[]|string $prerelease
+     * @param string[]|string $build
+     * @return self
+     */
+    public function increment($index, $prerelease = [], $build = [])
+    {
+        if (!isset($this->version[$index])) {
+            throw SemverException::format('Index %d does not exist in version', $index);
+        }
+        ++$this->version[$index];
+        while (++$index < count($this->version)) {
+            $this->version[$index] = 0;
+        }
+        $this->setPrerelease($prerelease);
+        $this->setBuild($build);
+        return $this;
+    }
+
+    /**
      * @param Version $that
      * @return bool
      */
@@ -346,6 +368,26 @@ class Version
     public function isLooselyMatched()
     {
         return $this->compliance === self::COMPLIANCE_NONE;
+    }
+
+    /**
+     * @param string[]|string $build
+     * @return $this
+     */
+    public function setBuild($build = [])
+    {
+        $this->build = $build ? is_array($build) ? $build : explode('.', $build) : [];
+        return $this;
+    }
+
+    /**
+     * @param string[]|string $prerelease
+     * @return $this
+     */
+    public function setPrerelease($prerelease = [])
+    {
+        $this->prerelease = $prerelease ? is_array($prerelease) ? $prerelease : explode('.', $prerelease) : [];
+        return $this;
     }
 
     /**
