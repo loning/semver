@@ -59,13 +59,14 @@ class VersionParser
         if (!preg_match(self::REGEX_SEMVER2, $version, $matches)) {
             throw SemverException::format('Could not parse Semver2 string "%s"', $version);
         }
+        $matches = array_pad($matches, 6, '');
 
         // Parse prerelease and build parts
         return [
             self::COMPLIANCE => Version::COMPLIANCE_SEMVER2,
             self::VERSION => self::splitSemverNumbers($matches[1]),
-            self::PRERELEASE => isset($matches[3]) ?  self::splitMetadata($matches[3]) : [],
-            self::BUILD => isset($matches[5]) ? self::splitMetadata($matches[5]) : [],
+            self::PRERELEASE => $matches[3],
+            self::BUILD => $matches[5],
         ];
     }
 
@@ -109,16 +110,5 @@ class VersionParser
             self::PRERELEASE => $pre,
             self::BUILD => $build,
         ];
-    }
-
-    private static function splitMetadata($metadata)
-    {
-        if (!isset($metadata) || 0 === strlen($metadata)) {
-            return [];
-        }
-
-        return array_map(function ($element) {
-            return ctype_digit($element) ? (int) $element : $element;
-        }, explode('.', $metadata));
     }
 }

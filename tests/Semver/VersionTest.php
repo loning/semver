@@ -10,7 +10,6 @@
 
 namespace Omines\Semver\Tests;
 
-use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Version;
 
 /**
@@ -33,8 +32,8 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, $semver->getMajor());
         $this->assertSame(2, $semver->getMinor());
         $this->assertSame(3, $semver->getPatch());
-        $this->assertSame('beta.1', $semver->getPrerelease());
-        $this->assertSame('build.25122015.ci', $semver->getBuild());
+        $this->assertEquals('beta.1', $semver->getPrerelease());
+        $this->assertEquals('build.25122015.ci', $semver->getBuild());
 
         // Test strings and numerics are handled correctly
         $this->assertSame('beta', $semver->getPrereleaseElement(0));

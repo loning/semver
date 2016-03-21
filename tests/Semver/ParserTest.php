@@ -36,7 +36,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function dataProvider()
     {
-        return json_decode(file_get_contents(__DIR__ . '/Data/Semver2/ParserTest.json'), JSON_OBJECT_AS_ARRAY);
+        foreach (json_decode(file_get_contents(__DIR__ . '/Data/Semver2/ParserTest.json'), JSON_OBJECT_AS_ARRAY) as $key => $value) {
+            yield $key => [$key, $value];
+        }
     }
 
     /** @noinspection PhpUnusedPrivateMethodInspection */
@@ -44,7 +46,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $output = [];
         foreach (['1', '1.0', '1.0.0', '1-alpha.1', '1+build.2', '1-rc.3+build.3'] as $sample) {
-            $output[$sample] = [$sample, VersionParser::parseSemver2($sample)];
+            $output[$sample] = VersionParser::parseSemver2($sample);
         }
         file_put_contents(__DIR__ . '/Data/ParserTestData.json', json_encode($output, JSON_PRETTY_PRINT));
     }

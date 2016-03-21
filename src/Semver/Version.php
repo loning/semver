@@ -13,6 +13,7 @@ namespace Omines\Semver;
 use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Parser\VersionParser;
 use Omines\Semver\Ranges\Range;
+use Omines\Semver\Version\Segment;
 
 /**
  * Semver Version number encapsulation.
@@ -31,10 +32,10 @@ class Version
     /** @var int[] */
     private $version;
 
-    /** @var mixed[] */
+    /** @var Segment */
     private $prerelease;
 
-    /** @var mixed[] */
+    /** @var Segment */
     private $build;
 
     /** @var string */
@@ -63,8 +64,8 @@ class Version
         }
 
         $this->version = $parsed[VersionParser::VERSION];
-        $this->prerelease = $parsed[VersionParser::PRERELEASE];
-        $this->build = $parsed[VersionParser::BUILD];
+        $this->prerelease = new Segment($parsed[VersionParser::PRERELEASE]);
+        $this->build = new Segment($parsed[VersionParser::BUILD]);
     }
 
     /**
@@ -126,7 +127,7 @@ class Version
      */
     public function compare(Version $that)
     {
-        return $this->compareByVersion($that) ?: $this->compareByPrerelease($that);
+        return $this->compareByVersion($that) ?: $this->prerelease->compare($that->prerelease);
     }
 
     /**
@@ -154,31 +155,12 @@ class Version
     }
 
     /**
-     * @param Version $that
-     * @return integer|double Negative is this is smaller, positive if that is smaller, or 0 if equals.
-     */
-    private function compareByPrerelease(Version $that)
-    {
-        if (!($leastPrereleases = min(count($this->prerelease), count($that->prerelease)))) {
-            return count($that->prerelease) - count($this->prerelease);
-        }
-        for ($idx = 0; $idx < $leastPrereleases; ++$idx) {
-            $left = &$this->prerelease[$idx];
-            $right = &$that->prerelease[$idx];
-            if ($left !== $right) {
-                return is_int($left) ? $left - $right : strcmp($left, $right);
-            }
-        }
-        return count($this->prerelease) - count($that->prerelease);
-    }
-
-    /**
      * @return Version A new version representing the next significant release (caret operator)
      */
     public function getNextSignificant()
     {
         $next = clone $this;
-        $next->prerelease = [];
+        $next->prerelease = new Segment();
         $max = count($this->version);
         $index = 0;
         do {
@@ -277,15 +259,15 @@ class Version
      */
     public function getBuildElement($index)
     {
-        return isset($this->build[$index]) ? $this->build[$index] : null;
+        return $this->build[$index];
     }
 
     /**
-     * @return string
+     * @return Segment
      */
     public function getBuild()
     {
-        return implode('.', $this->build);
+        return $this->build;
     }
 
     /**
@@ -318,10 +300,10 @@ class Version
     public function getNormalizedString()
     {
         $result = $this->getVersion();
-        if (!empty($this->prerelease)) {
+        if (count($this->prerelease)) {
             $result .= '-' . $this->getPrerelease();
         }
-        if (!empty($this->build)) {
+        if (count($this->build)) {
             $result .= '+' . $this->getBuild();
         }
 
@@ -343,15 +325,15 @@ class Version
      */
     public function getPrereleaseElement($index)
     {
-        return isset($this->prerelease[$index]) ? $this->prerelease[$index] : null;
+        return $this->prerelease[$index];
     }
 
     /**
-     * @return string
+     * @return Segment
      */
     public function getPrerelease()
     {
-        return implode('.', $this->prerelease);
+        return $this->prerelease;
     }
 
     /**
@@ -376,7 +358,7 @@ class Version
      */
     public function setBuild($build = [])
     {
-        $this->build = $build ? is_array($build) ? $build : explode('.', $build) : [];
+        $this->build = new Segment($build);
         return $this;
     }
 
@@ -386,7 +368,7 @@ class Version
      */
     public function setPrerelease($prerelease = [])
     {
-        $this->prerelease = $prerelease ? is_array($prerelease) ? $prerelease : explode('.', $prerelease) : [];
+        $this->prerelease = new Segment($prerelease);
         return $this;
     }
 
