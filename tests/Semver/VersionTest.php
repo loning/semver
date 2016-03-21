@@ -91,7 +91,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Omines\Semver\Exception\SemverException
-     * @expectedExceptionMessage Index 5 does not exist in version
+     * @expectedExceptionMessage Index 5 does not exist in numbers segment
      */
     public function testFailingIncrement()
     {

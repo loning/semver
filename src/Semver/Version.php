@@ -165,13 +165,7 @@ class Version implements VersionInterface
      */
     public function increment($index, $prerelease = [], $build = [])
     {
-        if (!isset($this->version[$index])) {
-            throw SemverException::format('Index %d does not exist in version', $index);
-        }
-        $this->version[$index] += 1;
-        while (++$index < count($this->version)) {
-            $this->version[$index] = 0;
-        }
+        $this->version->increment($index);
         $this->setPrerelease($prerelease);
         $this->setBuild($build);
         return $this;

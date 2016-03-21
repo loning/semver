@@ -20,6 +20,20 @@ use Omines\Semver\Exception\SemverException;
 class NumbersSegment extends AbstractSegment
 {
     /**
+     * @param int $index Index to increment, all subsequent numbers will be reset.
+     */
+    public function increment($index)
+    {
+        if (!isset($this[$index])) {
+            throw SemverException::format('Index %d does not exist in numbers segment', $index);
+        }
+        ++$this->elements[$index];
+        while (++$index < count($this->elements)) {
+            $this->elements[$index] = 0;
+        }
+    }
+
+    /**
      * @param int $first
      * @param int $second
      * @return int|double
