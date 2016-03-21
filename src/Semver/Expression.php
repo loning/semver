@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Ranges;
+namespace Omines\Semver\Expressions;
 
 use Omines\Semver\Parser\RangeParser;
 use Omines\Semver\Version;
@@ -18,7 +18,7 @@ use Omines\Semver\Version;
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
-class Range
+class Expression implements ExpressionInterface
 {
     /** @var Primitive[][] */
     private $elements = [];
@@ -40,7 +40,7 @@ class Range
 
     /**
      * @param $range
-     * @return Range
+     * @return Expression
      */
     public static function fromString($range)
     {
@@ -69,11 +69,11 @@ class Range
      * @param Version $version
      * @return bool Whether the version is within this range.
      */
-    public function satisfiedBy(Version $version)
+    public function matches(Version $version)
     {
         foreach ($this->elements as $or) {
             foreach ($or as $and) {
-                if (!$and->satisfiedBy($version)) {
+                if (!$and->matches($version)) {
                     continue 2;
                 }
             }

@@ -10,7 +10,7 @@
 
 namespace Omines\Semver\Tests;
 
-use Omines\Semver\Ranges\Range;
+use Omines\Semver\Expressions\Expression;
 use Omines\Semver\Version;
 
 /**
@@ -18,19 +18,19 @@ use Omines\Semver\Version;
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
-class RangeTest extends \PHPUnit_Framework_TestCase
+class ExpressionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider variousRangesProvider
      * @param string $string
      */
-    public function testRangeParser($string)
+    public function testExpressionParser($string)
     {
-        $range = Range::fromString($string);
+        $expression = Expression::fromString($string);
         $version = Version::fromString('6.8.4-alpha');
 
-        $this->assertEquals($string, $range->getOriginalString());
-        $this->assertEquals($range->satisfiedBy($version), $version->satisfies($range));
+        $this->assertEquals($string, $expression->getOriginalString());
+        $this->assertEquals($expression->matches($version), $version->satisfies($expression));
     }
 
     public function variousRangesProvider()

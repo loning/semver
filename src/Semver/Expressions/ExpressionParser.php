@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Parser;
+namespace Omines\Semver\Expressions;
 
 use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Ranges\Primitive;
@@ -19,7 +19,7 @@ use Omines\Semver\Version;
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
-class RangeParser
+class ExpressionParser
 {
     const REGEX_HYPHEN = '#^\s*([^\s]+)\s+\-\s+([^\s]+)\s*$#';
     const REGEX_RANGE = '#^\s*(\^|~|!=|<>|([><]?=?))([\dxX\*\.]+)((\-([a-z0-9\.\-]+))|)\s*$#i';

@@ -11,7 +11,7 @@
 namespace Omines\Semver\Parser;
 
 use Omines\Semver\Exception\SemverException;
-use Omines\Semver\Ranges\Primitive;
+use Omines\Semver\Expressions\Primitive;
 use Omines\Semver\Version;
 
 /**
