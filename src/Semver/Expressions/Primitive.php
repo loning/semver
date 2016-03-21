@@ -75,7 +75,7 @@ class Primitive implements ExpressionInterface
     }
 
     /**
-     * @param Version|string $version
+     * @param VersionInterface $version
      * @return bool
      */
     public function matches(VersionInterface $version)

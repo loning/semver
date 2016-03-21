@@ -124,12 +124,13 @@ class Version implements VersionInterface
     }
 
     /**
-     * @param Version $that Version to compare to.
+     * @param VersionInterface $that Version to compare to.
      * @return integer|double Negative is this is smaller, positive if that is smaller, or 0 if equals.
      */
-    public function compare(Version $that)
+    public function compare(VersionInterface $that)
     {
-        return $this->version->compare($that->version) ?: $this->prerelease->compare($that->prerelease);
+        return $this->version->compare($that->getVersion()) ?:
+               $this->prerelease->compare($that->getPrerelease());
     }
 
     /**
@@ -177,19 +178,19 @@ class Version implements VersionInterface
     }
 
     /**
-     * @param Version $that
+     * @param VersionInterface $that
      * @return bool
      */
-    public function equals(Version $that)
+    public function equals(VersionInterface $that)
     {
         return $this->compare($that) === 0;
     }
 
     /**
-     * @param Version $that
+     * @param VersionInterface $that
      * @return bool
      */
-    public function greaterThan(Version $that)
+    public function greaterThan(VersionInterface $that)
     {
         return $this->compare($that) > 0;
     }
@@ -204,19 +205,19 @@ class Version implements VersionInterface
     }
 
     /**
-     * @param Version $that
+     * @param VersionInterface $that
      * @return bool
      */
-    public function lessThan(Version $that)
+    public function lessThan(VersionInterface $that)
     {
         return $this->compare($that) < 0;
     }
 
     /**
-     * @param Version $that
+     * @param VersionInterface $that
      * @return bool
      */
-    public function lessThanOrEqual(Version $that)
+    public function lessThanOrEqual(VersionInterface $that)
     {
         return $this->compare($that) <= 0;
     }

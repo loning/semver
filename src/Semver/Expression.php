@@ -13,12 +13,11 @@ namespace Omines\Semver;
 use Omines\Semver\Expressions\ExpressionInterface;
 use Omines\Semver\Expressions\ExpressionParser;
 use Omines\Semver\Expressions\Primitive;
-use Omines\Semver\Parser\RangeParser;
 use Omines\Semver\Version;
 use Omines\Semver\Version\VersionInterface;
 
 /**
- * Encapsulates a range of versions.
+ * Encapsulates an expression covering a range of versions.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
@@ -33,22 +32,22 @@ class Expression implements ExpressionInterface
     /**
      * Range constructor.
      *
-     * @param string $range
+     * @param string $expression
      */
-    public function __construct($range)
+    public function __construct($expression)
     {
-        $range = (string) $range;
-        $this->originalString = $range;
-        $this->elements = ExpressionParser::parseExpression($range);
+        $expression = (string) $expression;
+        $this->originalString = $expression;
+        $this->elements = ExpressionParser::parseExpression($expression);
     }
 
     /**
-     * @param $range
+     * @param $expression
      * @return Expression
      */
-    public static function fromString($range)
+    public static function fromString($expression)
     {
-        return new self($range);
+        return new self($expression);
     }
 
     /**
@@ -70,8 +69,8 @@ class Expression implements ExpressionInterface
     }
 
     /**
-     * @param Version $version
-     * @return bool Whether the version is within this range.
+     * @param VersionInterface $version
+     * @return bool Whether the version is matches by this expression.
      */
     public function matches(VersionInterface $version)
     {

@@ -35,7 +35,7 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
 
     public function variousRangesProvider()
     {
-        $ranges = [
+        $expressions = [
             '^0.0.0',
             '^0.0.1',
             '^0.1.1',
@@ -63,7 +63,7 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
             '^1.2 | ~2.3 | ~3.4 | ^4.5',
             '^1.2 | ~2.3 | 3.4 - 3.5 | ^4.5',
         ];
-        return array_combine($ranges, array_map(function ($item) { return [$item]; }, $ranges));
+        return array_combine($expressions, array_map(function ($item) { return [$item]; }, $expressions));
     }
 
     /**
@@ -91,10 +91,10 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
     public function expressionDataProvider()
     {
         $data = json_decode(file_get_contents(__DIR__ . '/Data/Expressions/ExpressionMatches.json'), JSON_OBJECT_AS_ARRAY);
-        foreach ($data as $range => $tests) {
+        foreach ($data as $expression => $tests) {
             foreach ($tests as $type => $versions) {
                 foreach ($versions as $version) {
-                    yield "$range $type $version" => [$range, $type, Version::fromString($version)];
+                    yield "$expression $type $version" => [$expression, $type, Version::fromString($version)];
                 }
             }
         }

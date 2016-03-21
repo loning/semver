@@ -11,6 +11,8 @@
 namespace Omines\Semver\Version;
 
 use Omines\Semver\Expressions\ExpressionInterface;
+use Omines\Semver\Segments\AbstractSegment;
+use Omines\Semver\Segments\NumbersSegment;
 
 /**
  * VersionInterface
@@ -19,5 +21,37 @@ use Omines\Semver\Expressions\ExpressionInterface;
  */
 interface VersionInterface
 {
+    /**
+     * @return AbstractSegment
+     */
+    function getPrerelease();
+
+    /**
+     * @return NumbersSegment
+     */
+    function getVersion();
+
+    /**
+     * @param ExpressionInterface $expression
+     * @return bool
+     */
     function matches(ExpressionInterface $expression);
+
+    /**
+     * @param VersionInterface $version
+     * @return bool
+     */
+    function equals(VersionInterface $version);
+
+    /**
+     * @param VersionInterface $version
+     * @return bool
+     */
+    function greaterThan(VersionInterface $version);
+
+    /**
+     * @param VersionInterface $version
+     * @return bool
+     */
+    function lessThan(VersionInterface $version);
 }

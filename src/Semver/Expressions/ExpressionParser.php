@@ -43,7 +43,7 @@ class ExpressionParser
 
     /**
      * @param string $expression
-     * @return Primitive[] Collection of primitives matching the range.
+     * @return Primitive[] Collection of primitives matching the expression.
      */
     public static function parseSubexpression($expression)
     {
@@ -79,7 +79,7 @@ class ExpressionParser
 
     /**
      * @param string $simple
-     * @return Primitive[] Collection of primitives matching the simple range.
+     * @return Primitive[] Collection of primitives matching the simple expression.
      */
     public static function parseSimpleExpression($simple)
     {

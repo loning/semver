@@ -19,5 +19,9 @@ use Omines\Semver\Version\VersionInterface;
  */
 interface ExpressionInterface
 {
+    /**
+     * @param VersionInterface $version
+     * @return bool
+     */
     function matches(VersionInterface $version);
 }
