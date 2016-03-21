@@ -19,7 +19,7 @@ use Omines\Semver\Exception\SemverException;
  */
 class Segment implements \ArrayAccess, \Countable
 {
-    const REGEX_SEGMENT = '#^[A-Za-z0-9\-]+$#';
+    const REGEX_SEGMENT_ELEMENT = '#^[A-Za-z0-9\-]+$#';
 
     /**
      * @var mixed[]
@@ -33,14 +33,7 @@ class Segment implements \ArrayAccess, \Countable
     public function __construct($segment = [])
     {
         if ($segment) {
-            $this->elements = array_map(function ($element) {
-                if (ctype_digit($element)) {
-                    return (int) $element;
-                } elseif (preg_match(self::REGEX_SEGMENT, $element)) {
-                    return (string) $element;
-                }
-                throw SemverException::format('"%s" is not a valid version segment', $element);
-            }, is_array($segment) ? $segment : explode('.', $segment));
+            $this->elements = array_map([$this, 'sanitizeValue'], is_array($segment) ? $segment : explode('.', $segment));
         }
     }
 
@@ -92,9 +85,8 @@ class Segment implements \ArrayAccess, \Countable
      */
     public function offsetSet($offset, $value)
     {
-        if (!preg_match(self::REGEX_SEGMENT, $value)) {
-            throw SemverException::format('"%s" is not a valid version segment', $value);
-        } elseif (is_null($offset)) {
+        $value = $this->sanitizeValue($value);
+        if (is_null($offset)) {
             $this->elements[] = $value;
         } else {
             $this->elements[$offset] = $value;
@@ -115,5 +107,19 @@ class Segment implements \ArrayAccess, \Countable
     public function __toString()
     {
         return implode('.', $this->elements);
+    }
+
+    /**
+     * @param mixed $value
+     * @return int|string
+     */
+    private function sanitizeValue($value)
+    {
+        if (ctype_digit($value)) {
+            return (int) $value;
+        } elseif (preg_match(self::REGEX_SEGMENT_ELEMENT, $value)) {
+            return (string) $value;
+        }
+        throw SemverException::format('"%s" is not a valid version segment element', $value);
     }
 }
