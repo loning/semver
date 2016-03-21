@@ -20,7 +20,7 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
     /**
      * @var mixed[]
      */
-    private $elements = [];
+    protected $elements = [];
 
     /**
      * Segment constructor.
@@ -29,25 +29,31 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
     public function __construct($segment = [])
     {
         if ($segment) {
-            $this->elements = array_map([$this, 'sanitizeValue'], is_array($segment) ? $segment : explode('.', $segment));
+            $this->elements = array_map(function ($value) {
+                return $this->sanitizeValue($value);
+            }, is_array($segment) ? $segment : explode('.', $segment));
         }
     }
 
     /**
-     * @param Segment $that
+     * @param AbstractSegment $that
      * @return integer|double Negative is this is smaller, positive if that is smaller, or 0 if equals.
      */
-    public function compare(Segment $that)
+    public function compare(AbstractSegment $that)
     {
-        if (!($leastPrereleases = min(count($this->elements), count($that->elements)))) {
+        $thoseElements = count($that->elements);
+        $theseElements = count($this->elements);
+        if (!$thoseElements || !$theseElements) {
             return count($that->elements) - count($this->elements);
+        } elseif($thoseElements > $theseElements) {
+            return -$that->compare($this);
         }
-        for ($idx = 0; $idx < $leastPrereleases; ++$idx) {
-            if ($result = $this->compareElements($this->elements[$idx], $that->elements[$idx])) {
+        for ($idx = 0; $idx < $theseElements; ++$idx) {
+            if ($result = $this->compareElements($this[$idx], $that[$idx])) {
                 return $result;
             }
         }
-        return count($this->elements) - count($that->elements);
+        return 0;
     }
 
     /**

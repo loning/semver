@@ -17,9 +17,9 @@ use Omines\Semver\Exception\SemverException;
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
-class Segment extends AbstractSegment
+class IdentifierSegment extends AbstractSegment
 {
-    const REGEX_ALPHANUMERIC_ELEMENT = '#^[A-Za-z0-9\-]+$#';
+    const REGEX_IDENTIFIER_ELEMENT = '#^[A-Za-z0-9\-]+$#';
 
     /**
      * @param mixed $first
@@ -40,9 +40,9 @@ class Segment extends AbstractSegment
      */
     protected function sanitizeValue($value)
     {
-        if (ctype_digit($value)) {
+        if (is_int($value) || ctype_digit($value)) {
             return (int) $value;
-        } elseif (preg_match(self::REGEX_ALPHANUMERIC_ELEMENT, $value)) {
+        } elseif (preg_match(self::REGEX_IDENTIFIER_ELEMENT, $value)) {
             return (string) $value;
         }
         throw SemverException::format('"%s" is not a valid version segment element', $value);

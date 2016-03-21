@@ -13,7 +13,8 @@ namespace Omines\Semver;
 use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Parser\VersionParser;
 use Omines\Semver\Ranges\Range;
-use Omines\Semver\Version\Segment;
+use Omines\Semver\Version\IdentifierSegment;
+use Omines\Semver\Version\NumbersSegment;
 
 /**
  * Semver Version number encapsulation.
@@ -29,13 +30,13 @@ class Version
     const INDEX_MINOR = 1;
     const INDEX_PATCH = 2;
 
-    /** @var int[] */
+    /** @var NumbersSegment */
     private $version;
 
-    /** @var Segment */
+    /** @var IdentifierSegment */
     private $prerelease;
 
-    /** @var Segment */
+    /** @var IdentifierSegment */
     private $build;
 
     /** @var string */
@@ -63,9 +64,9 @@ class Version
             throw SemverException::format('Version "%s" is not of required compliance level', $version);
         }
 
-        $this->version = $parsed[VersionParser::VERSION];
-        $this->prerelease = new Segment($parsed[VersionParser::PRERELEASE]);
-        $this->build = new Segment($parsed[VersionParser::BUILD]);
+        $this->version = new NumbersSegment($parsed[VersionParser::VERSION]);
+        $this->prerelease = new IdentifierSegment($parsed[VersionParser::PRERELEASE]);
+        $this->build = new IdentifierSegment($parsed[VersionParser::BUILD]);
     }
 
     /**
@@ -127,31 +128,7 @@ class Version
      */
     public function compare(Version $that)
     {
-        return $this->compareByVersion($that) ?: $this->prerelease->compare($that->prerelease);
-    }
-
-    /**
-     * @param Version $that
-     * @return integer|double Negative is this is smaller, positive if that is smaller, or 0 if equals.
-     */
-    private function compareByVersion(Version $that)
-    {
-        $thoseNumbers = count($that->version);
-        $theseNumbers = count($this->version);
-        if ($thoseNumbers < $theseNumbers) {
-            return -$that->compareByVersion($this);
-        }
-        for ($idx = 0; $idx < $theseNumbers; ++$idx) {
-            if ($this->version[$idx] != $that->version[$idx]) {
-                return $this->version[$idx] - $that->version[$idx];
-            }
-        }
-        for (; $idx < $thoseNumbers; ++$idx) {
-            if ($that->version[$idx]) {
-                return -1;
-            }
-        }
-        return 0;
+        return $this->version->compare($that->version) ?: $this->prerelease->compare($that->prerelease);
     }
 
     /**
@@ -160,19 +137,19 @@ class Version
     public function getNextSignificant()
     {
         $next = clone $this;
-        $next->prerelease = new Segment();
+        $next->prerelease = new IdentifierSegment();
         $max = count($this->version);
         $index = 0;
         do {
             if ($this->version[$index]) {
-                ++$next->version[$index++];
+                $next->version[$index++] += 1;
                 while ($index < $max) {
                     $next->version[$index++] = 0;
                 }
                 return $next;
             }
         } while (++$index < $max);
-        $next->version = [0, 0, 1];
+        $next->version = new NumbersSegment([0, 0, 1]);
         return $next;
     }
 
@@ -189,7 +166,7 @@ class Version
         if (!isset($this->version[$index])) {
             throw SemverException::format('Index %d does not exist in version', $index);
         }
-        ++$this->version[$index];
+        $this->version[$index] += 1;
         while (++$index < count($this->version)) {
             $this->version[$index] = 0;
         }
@@ -263,7 +240,7 @@ class Version
     }
 
     /**
-     * @return Segment
+     * @return IdentifierSegment
      */
     public function getBuild()
     {
@@ -299,7 +276,7 @@ class Version
      */
     public function getNormalizedString()
     {
-        $result = $this->getVersion();
+        $result = (string) $this->getVersion();
         if (count($this->prerelease)) {
             $result .= '-' . $this->getPrerelease();
         }
@@ -329,7 +306,7 @@ class Version
     }
 
     /**
-     * @return Segment
+     * @return IdentifierSegment
      */
     public function getPrerelease()
     {
@@ -337,11 +314,11 @@ class Version
     }
 
     /**
-     * @return string
+     * @return NumbersSegment
      */
     public function getVersion()
     {
-        return implode('.', $this->version);
+        return $this->version;
     }
 
     /**
@@ -358,7 +335,7 @@ class Version
      */
     public function setBuild($build = [])
     {
-        $this->build = new Segment($build);
+        $this->build = new IdentifierSegment($build);
         return $this;
     }
 
@@ -368,8 +345,18 @@ class Version
      */
     public function setPrerelease($prerelease = [])
     {
-        $this->prerelease = new Segment($prerelease);
+        $this->prerelease = new IdentifierSegment($prerelease);
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __clone()
+    {
+        $this->version = clone $this->version;
+        $this->prerelease = clone $this->prerelease;
+        $this->build = clone $this->build;
     }
 
     /**

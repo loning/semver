@@ -11,7 +11,8 @@
 namespace Omines\Semver\Tests\Version;
 
 use Omines\Semver\Exception\SemverException;
-use Omines\Semver\Version\Segment;
+use Omines\Semver\Version\IdentifierSegment;
+use Omines\Semver\Version\NumbersSegment;
 
 /**
  * SegmentTest
@@ -22,7 +23,7 @@ class SegmentTest extends \PHPUnit_Framework_TestCase
 {
     public function testSegments()
     {
-        $segment = new Segment('aap.noot.684.mies');
+        $segment = new IdentifierSegment('aap.noot.684.mies');
         $this->assertTrue(isset($segment[3]));
         $this->assertFalse(isset($segment[7]));
 
@@ -48,9 +49,18 @@ class SegmentTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Omines\Semver\Exception\SemverException
      * @expectedExceptionMessage is not a valid version segment
      */
-    public function testInvalidConstructor()
+    public function testInvalidIdentifier()
     {
-        new Segment('fwei.9299.jowrjkio.92*(U((N@N*');
+        new IdentifierSegment('fwei.9299.jowrjkio.92*(U((N@N*');
+    }
+
+    /**
+     * @expectedException \Omines\Semver\Exception\SemverException
+     * @expectedExceptionMessage is not a numeric version segment value
+     */
+    public function testInvalidNumber()
+    {
+        new NumbersSegment('1.2.684.aap');
     }
 
     /**
@@ -59,7 +69,7 @@ class SegmentTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidSetter()
     {
-        $segment = new Segment();
+        $segment = new IdentifierSegment();
         $segment[3] = '92*(U((N@N*';
     }
 }
