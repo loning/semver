@@ -51,7 +51,7 @@ class VersionParser
 
     /**
      * @param string $version
-     * @return array<string,array> Array of arrays containing the separate sections.
+     * @return array<string,array|string> Array of arrays containing the separate sections.
      */
     public static function parseSemver2($version)
     {

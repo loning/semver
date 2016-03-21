@@ -11,8 +11,6 @@
 namespace Omines\Semver\Version;
 
 use Omines\Semver\Expressions\ExpressionInterface;
-use Omines\Semver\Segments\AbstractSegment;
-use Omines\Semver\Segments\NumbersSegment;
 
 /**
  * VersionInterface

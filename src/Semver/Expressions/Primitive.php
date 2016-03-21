@@ -39,7 +39,7 @@ class Primitive implements ExpressionInterface
         self::OPERATOR_LT => self::OPERATOR_GE,
     ];
 
-    /** @var Version */
+    /** @var VersionInterface */
     private $version;
 
     /** @var string */
