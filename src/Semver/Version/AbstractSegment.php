@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Segments;
+namespace Omines\Semver\Version;
 
 /**
  * AbstractSegment

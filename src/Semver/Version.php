@@ -12,8 +12,8 @@ namespace Omines\Semver;
 
 use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Expressions\ExpressionInterface;
-use Omines\Semver\Segments\IdentifierSegment;
-use Omines\Semver\Segments\NumbersSegment;
+use Omines\Semver\Version\IdentifierSegment;
+use Omines\Semver\Version\NumbersSegment;
 use Omines\Semver\Version\VersionInterface;
 use Omines\Semver\Version\VersionParser;
 

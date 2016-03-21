@@ -10,8 +10,8 @@
 
 namespace Omines\Semver\Tests\Version;
 
-use Omines\Semver\Segments\IdentifierSegment;
-use Omines\Semver\Segments\NumbersSegment;
+use Omines\Semver\Version\IdentifierSegment;
+use Omines\Semver\Version\NumbersSegment;
 
 /**
  * SegmentTest
