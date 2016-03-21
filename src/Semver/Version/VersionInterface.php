@@ -8,16 +8,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Expressions;
+namespace Omines\Semver\Version;
 
-use Omines\Semver\Version\VersionInterface;
+use Omines\Semver\Expressions\ExpressionInterface;
 
 /**
- * Interface ExpressionInterface
+ * VersionInterface
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
-interface ExpressionInterface
+interface VersionInterface
 {
-    function matches(VersionInterface $version);
+    function matches(ExpressionInterface $expression);
 }

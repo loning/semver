@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Version;
+namespace Omines\Semver\Segments;
 
 use Omines\Semver\Exception\SemverException;
 

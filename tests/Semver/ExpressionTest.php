@@ -10,11 +10,11 @@
 
 namespace Omines\Semver\Tests;
 
-use Omines\Semver\Expressions\Expression;
+use Omines\Semver\Expression;
 use Omines\Semver\Version;
 
 /**
- * RangeTest
+ * ExpressionTest
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
@@ -30,7 +30,7 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
         $version = Version::fromString('6.8.4-alpha');
 
         $this->assertEquals($string, $expression->getOriginalString());
-        $this->assertEquals($expression->matches($version), $version->satisfies($expression));
+        $this->assertEquals($expression->matches($version), $version->matches($expression));
     }
 
     public function variousRangesProvider()
@@ -67,30 +67,30 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider rangeDataProvider
+     * @dataProvider expressionDataProvider
      *
      * @param string $string
      * @param string $type
      * @param Version $version
      */
-    public function testRange($string, $type, $version)
+    public function testExpression($string, $type, $version)
     {
-        $range = Range::fromString($string);
+        $expression = Expression::fromString($string);
         switch ($type) {
             case 'match':
-                $this->assertTrue($range->satisfiedBy($version));
+                $this->assertTrue($expression->matches($version));
                 break;
             case 'fail':
-                $this->assertFalse($range->satisfiedBy($version));
+                $this->assertFalse($expression->matches($version));
                 break;
             default:
                 // TODO: Implement lt/gt
         }
     }
 
-    public function rangeDataProvider()
+    public function expressionDataProvider()
     {
-        $data = json_decode(file_get_contents(__DIR__ . '/Data/Ranges/RangeMatches.json'), JSON_OBJECT_AS_ARRAY);
+        $data = json_decode(file_get_contents(__DIR__ . '/Data/Expressions/ExpressionMatches.json'), JSON_OBJECT_AS_ARRAY);
         foreach ($data as $range => $tests) {
             foreach ($tests as $type => $versions) {
                 foreach ($versions as $version) {
@@ -101,20 +101,20 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider normalizedRangeDataProvider
+     * @dataProvider normalizedExpressionDataProvider
      *
      * @param string $input
      * @param string $expected
      */
-    public function testRangeNormalization($input, $expected)
+    public function testExpressionNormalization($input, $expected)
     {
-        $this->assertEquals($expected, $range = Range::fromString($input));
-        $this->assertEquals($expected, Range::fromString($range)->getNormalizedString());
+        $this->assertEquals($expected, $expression = Expression::fromString($input));
+        $this->assertEquals($expected, Expression::fromString($expression)->getNormalizedString());
     }
 
-    public function normalizedRangeDataProvider()
+    public function normalizedExpressionDataProvider()
     {
-        $data = json_decode(file_get_contents(__DIR__ . '/Data/Ranges/NormalizedRanges.json'), JSON_OBJECT_AS_ARRAY);
+        $data = json_decode(file_get_contents(__DIR__ . '/Data/Expressions/NormalizedExpressions.json'), JSON_OBJECT_AS_ARRAY);
         foreach ($data as $key => $value) {
             yield $value => [$key, $value];
         }

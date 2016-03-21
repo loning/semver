@@ -8,17 +8,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Ranges;
+namespace Omines\Semver\Expressions;
 
 use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Version;
+use Omines\Semver\Version\VersionInterface;
 
 /**
  * Primitive.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
-class Primitive
+class Primitive implements ExpressionInterface
 {
     const OPERATOR_EQ = '=';
     const OPERATOR_GT = '>';
@@ -50,7 +51,7 @@ class Primitive
     /**
      * Primitive constructor.
      *
-     * @param string|Version $version
+     * @param string|VersionInterface $version
      * @param string $operator
      * @param bool $negate
      */
@@ -60,7 +61,7 @@ class Primitive
             throw SemverException::format('Invalid primitive operator "%s"', $operator);
         }
 
-        $this->version = $version instanceof Version ? $version : Version::fromString($version);
+        $this->version = $version instanceof VersionInterface ? $version : Version::fromString($version);
         $this->operator = $operator;
         $this->negate = (bool) $negate;
     }
@@ -77,9 +78,8 @@ class Primitive
      * @param Version|string $version
      * @return bool
      */
-    public function satisfiedBy($version)
+    public function matches(VersionInterface $version)
     {
-        $version = $version instanceof Version ? $version : Version::fromString($version);
         switch ($this->operator) {
             case self::OPERATOR_EQ:
                 return $this->negate xor $version->equals($this->version);

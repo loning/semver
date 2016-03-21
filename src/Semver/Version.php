@@ -11,17 +11,18 @@
 namespace Omines\Semver;
 
 use Omines\Semver\Exception\SemverException;
-use Omines\Semver\Parser\VersionParser;
-use Omines\Semver\Ranges\Range;
-use Omines\Semver\Version\IdentifierSegment;
-use Omines\Semver\Version\NumbersSegment;
+use Omines\Semver\Expressions\ExpressionInterface;
+use Omines\Semver\Segments\IdentifierSegment;
+use Omines\Semver\Segments\NumbersSegment;
+use Omines\Semver\Version\VersionInterface;
+use Omines\Semver\Version\VersionParser;
 
 /**
  * Semver Version number encapsulation.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
-class Version
+class Version implements VersionInterface
 {
     const COMPLIANCE_NONE = 0;
     const COMPLIANCE_SEMVER2 = 1;
@@ -221,12 +222,12 @@ class Version
     }
 
     /**
-     * @param Range $range
+     * @param ExpressionInterface $expression
      * @return bool
      */
-    public function satisfies(Range $range)
+    public function matches(ExpressionInterface $expression)
     {
-        return $range->satisfiedBy($this);
+        return $expression->matches($this);
     }
 
     /**

@@ -10,8 +10,8 @@
 
 namespace Omines\Semver\Tests;
 
-use Omines\Semver\Parser\RangeParser;
-use Omines\Semver\Parser\VersionParser;
+use Omines\Semver\Expressions\ExpressionParser;
+use Omines\Semver\Version\VersionParser;
 
 /**
  * ParserTest.
@@ -82,9 +82,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Omines\Semver\Exception\SemverException
      * @expectedExceptionMessage Could not parse simple constraint
      */
-    public function testBrokenRangeException()
+    public function testBrokenExpressionException()
     {
-        RangeParser::parseRange('test || for || exception');
+        ExpressionParser::parseExpression('test || for || exception');
     }
 
     /**
@@ -93,6 +93,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidInequalityException()
     {
-        RangeParser::parseRange('!=1.x');
+        ExpressionParser::parseExpression('!=1.x');
     }
 }

@@ -10,7 +10,7 @@
 
 namespace Omines\Semver\Tests;
 
-use Omines\Semver\Ranges\Primitive;
+use Omines\Semver\Expressions\Primitive;
 
 /**
  * PrimitiveTest
@@ -26,6 +26,6 @@ class PrimitiveTest extends \PHPUnit_Framework_TestCase
     public function testInvalidOperatorThrows()
     {
         $primitive = new Primitive('1.0.0', 'invalid');
-        $primitive->satisfiedBy('1.2.0');
+        $primitive->matches('1.2.0');
     }
 }

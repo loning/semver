@@ -11,52 +11,51 @@
 namespace Omines\Semver\Expressions;
 
 use Omines\Semver\Exception\SemverException;
-use Omines\Semver\Ranges\Primitive;
 use Omines\Semver\Version;
 
 /**
- * RangeParser
+ * ExpressionParser
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
 class ExpressionParser
 {
     const REGEX_HYPHEN = '#^\s*([^\s]+)\s+\-\s+([^\s]+)\s*$#';
-    const REGEX_RANGE = '#^\s*(\^|~|!=|<>|([><]?=?))([\dxX\*\.]+)((\-([a-z0-9\.\-]+))|)\s*$#i';
+    const REGEX_SIMPLE_EXPRESSION = '#^\s*(\^|~|!=|<>|([><]?=?))([\dxX\*\.]+)((\-([a-z0-9\.\-]+))|)\s*$#i';
     const REGEX_SPLIT_RANGESET = '#\s*\|\|?\s*#';
 
     const OPERATOR_CARET = '^';
     const OPERATOR_TILDE = '~';
 
     /**
-     * @param string $range
+     * @param string $expression
      * @return Primitive[][] Disjunctive collection of conjunctive collections of primitives.
      */
-    public static function parseRangeSet($range)
+    public static function parseExpression($expression)
     {
         // Split disjunctive elements
-        $elements = preg_split(self::REGEX_SPLIT_RANGESET, trim($range));
+        $elements = preg_split(self::REGEX_SPLIT_RANGESET, trim($expression));
         foreach ($elements as &$element) {
-            $element = self::parseRange($element);
+            $element = self::parseSubexpression($element);
         }
         return $elements;
     }
 
     /**
-     * @param string $range
+     * @param string $expression
      * @return Primitive[] Collection of primitives matching the range.
      */
-    public static function parseRange($range)
+    public static function parseSubexpression($expression)
     {
         // Detect hyphen
-        if (preg_match(self::REGEX_HYPHEN, $range, $parts)) {
+        if (preg_match(self::REGEX_HYPHEN, $expression, $parts)) {
             return self::parseHyphen($parts[1], $parts[2]);
         }
 
         // Split regular simple constraints
         $primitives = [];
-        foreach (preg_split('/\s+/', $range) as $simple) {
-            $primitives = array_merge($primitives, self::parseSimpleRange($simple));
+        foreach (preg_split('/\s+/', $expression) as $simple) {
+            $primitives = array_merge($primitives, self::parseSimpleExpression($simple));
         }
         return $primitives;
     }
@@ -82,9 +81,9 @@ class ExpressionParser
      * @param string $simple
      * @return Primitive[] Collection of primitives matching the simple range.
      */
-    public static function parseSimpleRange($simple)
+    public static function parseSimpleExpression($simple)
     {
-        if (!preg_match(self::REGEX_RANGE, $simple ?: '*', $parts)) {
+        if (!preg_match(self::REGEX_SIMPLE_EXPRESSION, $simple ?: '*', $parts)) {
             throw SemverException::format('Could not parse simple constraint "%s"', $simple);
         }
         $operator = $parts[1] ?: '=';

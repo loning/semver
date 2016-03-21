@@ -8,10 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Expressions;
+namespace Omines\Semver;
 
+use Omines\Semver\Expressions\ExpressionInterface;
+use Omines\Semver\Expressions\ExpressionParser;
+use Omines\Semver\Expressions\Primitive;
 use Omines\Semver\Parser\RangeParser;
 use Omines\Semver\Version;
+use Omines\Semver\Version\VersionInterface;
 
 /**
  * Encapsulates a range of versions.
@@ -35,7 +39,7 @@ class Expression implements ExpressionInterface
     {
         $range = (string) $range;
         $this->originalString = $range;
-        $this->elements = RangeParser::parseRangeSet($range);
+        $this->elements = ExpressionParser::parseExpression($range);
     }
 
     /**
@@ -69,7 +73,7 @@ class Expression implements ExpressionInterface
      * @param Version $version
      * @return bool Whether the version is within this range.
      */
-    public function matches(Version $version)
+    public function matches(VersionInterface $version)
     {
         foreach ($this->elements as $or) {
             foreach ($or as $and) {

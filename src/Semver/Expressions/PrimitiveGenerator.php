@@ -8,10 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Parser;
+namespace Omines\Semver\Expressions;
 
 use Omines\Semver\Exception\SemverException;
-use Omines\Semver\Expressions\Primitive;
 use Omines\Semver\Version;
 
 /**
@@ -29,8 +28,8 @@ class PrimitiveGenerator
     protected function __construct()
     {
         $this->generators = [
-            RangeParser::OPERATOR_CARET => [$this, 'generateCaretPrimitives'],
-            RangeParser::OPERATOR_TILDE => [$this, 'generateTildePrimitives'],
+            ExpressionParser::OPERATOR_CARET => [$this, 'generateCaretPrimitives'],
+            ExpressionParser::OPERATOR_TILDE => [$this, 'generateTildePrimitives'],
             Primitive::OPERATOR_GT => [$this, 'generateGreaterThanPrimitives'],
             Primitive::OPERATOR_GE => [$this, 'generateGreaterThanOrEqualPrimitives'],
             Primitive::OPERATOR_LT => [$this, 'generateLessThanPrimitives'],
