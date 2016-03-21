@@ -70,6 +70,10 @@ class VersionParser
         ];
     }
 
+    /**
+     * @param string $string
+     * @return mixed[]
+     */
     private static function splitSemverNumbers($string)
     {
         // Parse version part

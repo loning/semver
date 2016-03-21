@@ -172,7 +172,7 @@ class Version
                 return $next;
             }
         } while (++$index < $max);
-        $next->version = [0,0,1];
+        $next->version = [0, 0, 1];
         return $next;
     }
 

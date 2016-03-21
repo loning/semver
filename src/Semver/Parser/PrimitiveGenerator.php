@@ -28,7 +28,7 @@ class PrimitiveGenerator
 
     protected function __construct()
     {
-       $this->generators = [
+        $this->generators = [
             RangeParser::OPERATOR_CARET => [$this, 'generateCaretPrimitives'],
             RangeParser::OPERATOR_TILDE => [$this, 'generateTildePrimitives'],
             Primitive::OPERATOR_GT => [$this, 'generateGreaterThanPrimitives'],
