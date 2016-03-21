@@ -3,13 +3,16 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.2.0] - 2016-03-21
 ### Added
 - Increment functionality on Version
 - Collections support `each($closure)`
 - Loose version parser
 
 ### Changed
-- *BREAKING*: Many public API calls reorganized
+- *BREAKING*: Renamed `Range` to `Expression`
+- *BREAKING*: Many public API calls reorganized/changed
 
 ## 0.1.0 - 2016-03-14
 ### Added
@@ -19,4 +22,5 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - VersionList encapsulation of a regular array with Semver values
 - Range implementation with all common operators
 
-[Unreleased]: https://github.com/omines/semver/compare/0.1.0...master
+[Unreleased]: https://github.com/omines/semver/compare/0.2.0...master
+[0.2.0]: https://github.com/omines/semver/compare/0.1.0...0.2.0
