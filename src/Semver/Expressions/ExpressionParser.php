@@ -86,7 +86,7 @@ class ExpressionParser
         if (!preg_match(self::REGEX_SIMPLE_EXPRESSION, $simple ?: '*', $parts)) {
             throw SemverException::format('Could not parse simple constraint "%s"', $simple);
         }
-        $operator = $parts[1] ?: '=';
+        $operator = $parts[1];
         $partial = str_replace(['*', 'x', 'X'], '*', $parts[3]);
         $qualifier = $parts[4];
 

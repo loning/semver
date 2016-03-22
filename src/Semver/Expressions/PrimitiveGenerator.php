@@ -42,7 +42,7 @@ class PrimitiveGenerator
 
     public function generate($operator, $data)
     {
-        if (is_callable($this->generators[$operator])) {
+        if (is_callable($this->generators[$operator ?: '='])) {
             return forward_static_call_array($this->generators[$operator], $data);
         }
 
