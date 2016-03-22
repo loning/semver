@@ -42,13 +42,13 @@ class PrimitiveGenerator
 
     public function generate($operator, $data)
     {
-        if (is_callable($this->generators[$operator ?: '='])) {
+        if (empty($operator)) {
+            $operator = '=';
+        }
+        if (isset($this->generators[$operator])) {
             return forward_static_call_array($this->generators[$operator], $data);
         }
-
-        // @codeCoverageIgnoreStart
         throw SemverException::format('Unknown operator "%s"', $operator);
-        // @codeCoverageIgnoreEnd
     }
 
     public static function getInstance()

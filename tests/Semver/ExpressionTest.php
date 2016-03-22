@@ -11,6 +11,7 @@
 namespace Omines\Semver\Tests;
 
 use Omines\Semver\Expression;
+use Omines\Semver\Expressions\PrimitiveGenerator;
 use Omines\Semver\Version;
 
 /**
@@ -118,5 +119,14 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
         foreach ($data as $key => $value) {
             yield $value => [$key, $value];
         }
+    }
+
+    /**
+     * @expectedException \Omines\Semver\Exception\SemverException
+     * @expectedExceptionMessage Unknown operator "^="
+     */
+    public function testPrimitiveGeneratorThrowsOnInvalidOperator()
+    {
+        PrimitiveGenerator::getInstance()->generate('^=', []);
     }
 }
