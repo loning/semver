@@ -87,9 +87,10 @@ class Primitive implements ExpressionInterface
                 return $this->negate xor $version->greaterThan($this->version);
             case self::OPERATOR_LT:
                 return $this->negate xor $version->lessThan($this->version);
-        }
         // @codeCoverageIgnoreStart
-        throw SemverException::format('Invalid primitive operator "%s"', $this->operator);
+            default:
+                throw SemverException::format('Invalid primitive operator "%s"', $this->operator);
+        }
         // @codeCoverageIgnoreEnd
     }
 
