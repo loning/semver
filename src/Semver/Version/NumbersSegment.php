@@ -34,6 +34,15 @@ class NumbersSegment extends AbstractSegment
     }
 
     /**
+     * @param string|mixed[]|null $segment
+     * @return self
+     */
+    public function set($segment = null)
+    {
+        return parent::set($segment ?: [0, 0, 1]);
+    }
+
+    /**
      * @param int $first
      * @param int $second
      * @return int|double

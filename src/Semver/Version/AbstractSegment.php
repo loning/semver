@@ -24,15 +24,11 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
 
     /**
      * Segment constructor.
-     * @param string|mixed[] $segment
+     * @param string|mixed[]|null $segment
      */
-    public function __construct($segment = [])
+    public function __construct($segment = null)
     {
-        if ($segment) {
-            $this->elements = array_map(function ($value) {
-                return $this->sanitizeValue($value);
-            }, is_array($segment) ? $segment : explode('.', $segment));
-        }
+        $this->set($segment);
     }
 
     /**
@@ -54,6 +50,30 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
             }
         }
         return 0;
+    }
+
+    /**
+     * @param string|mixed[]|null $segment
+     * @return self
+     */
+    public function set($segment = null)
+    {
+        if ($segment) {
+            $this->elements = array_map(function ($value) {
+                return $this->sanitizeValue($value);
+            }, is_array($segment) ? $segment : explode('.', $segment));
+        } else {
+            $this->elements = [];
+        }
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function reset()
+    {
+        return $this->set();
     }
 
     /**

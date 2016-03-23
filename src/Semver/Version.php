@@ -139,7 +139,7 @@ class Version implements VersionInterface
     public function getNextSignificant()
     {
         $next = clone $this;
-        $next->prerelease = new IdentifierSegment();
+        $next->prerelease->reset();
         $max = count($this->version);
         $index = 0;
         do {
@@ -326,22 +326,22 @@ class Version implements VersionInterface
     }
 
     /**
-     * @param string[]|string $build
+     * @param string[]|string|null $build
      * @return $this
      */
     public function setBuild($build = [])
     {
-        $this->build = new IdentifierSegment($build);
+        $this->build->set($build);
         return $this;
     }
 
     /**
-     * @param string[]|string $prerelease
+     * @param string[]|string|null $prerelease
      * @return $this
      */
-    public function setPrerelease($prerelease = [])
+    public function setPrerelease($prerelease = null)
     {
-        $this->prerelease = new IdentifierSegment($prerelease);
+        $this->prerelease->set($prerelease);
         return $this;
     }
 
