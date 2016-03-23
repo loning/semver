@@ -27,6 +27,11 @@
       "Omines\\Semver\\": "src/Semver/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Omines\\Tests\\Semver\\": "tests/Semver/"
+    }
+  },
   "extra": {
     "branch-alias": {
       "dev-master": "0.2.x-dev"

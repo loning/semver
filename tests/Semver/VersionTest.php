@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Tests;
+namespace Omines\Tests\Semver;
 
 use Omines\Semver\Version;
 
@@ -141,6 +141,9 @@ class VersionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider looseVersionsProvider
+     *
+     * @param string $loose
+     * @param string $strict
      */
     public function testLooseParsing($loose, $strict)
     {
@@ -152,7 +155,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
 
     public function looseVersionsProvider()
     {
-        $data = json_decode(file_get_contents(__DIR__ . '/Data/Loose/Versions.json'), JSON_OBJECT_AS_ARRAY);
+        $data = json_decode(file_get_contents(FIXTURES_PATH . '/Loose/Versions.json'), JSON_OBJECT_AS_ARRAY);
         foreach ($data as $key => $value) {
             yield $key => [$key, $value];
         }
@@ -188,7 +191,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
 
     public function comparisonProvider()
     {
-        $versions = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/IncrementalVersions.json'), JSON_OBJECT_AS_ARRAY);
+        $versions = json_decode(file_get_contents(FIXTURES_PATH . '/Semver2/IncrementalVersions.json'), JSON_OBJECT_AS_ARRAY);
         for ($i = 0; $i < count($versions) - 1; ++$i) {
             $low = $versions[$i];
             $high = $versions[$i + 1];

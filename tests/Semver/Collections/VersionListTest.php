@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Tests;
+namespace Omines\Tests\Semver\Collections;
 
 use Omines\Semver\Collections\VersionList;
 use Omines\Semver\Version;
@@ -28,8 +28,8 @@ class VersionListTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->sorted = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/IncrementalVersions.json'));
-        $this->random = json_decode(file_get_contents(__DIR__ . '/Data/Semver2/ShuffledVersions.json'));
+        $this->sorted = json_decode(file_get_contents(FIXTURES_PATH . '/Semver2/IncrementalVersions.json'));
+        $this->random = json_decode(file_get_contents(FIXTURES_PATH . '/Semver2/ShuffledVersions.json'));
         $this->reverse = array_reverse($this->sorted);
 
         $this->normalizedSorted = array_map(function ($item) {

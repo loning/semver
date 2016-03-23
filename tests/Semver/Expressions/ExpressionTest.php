@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Tests;
+namespace Omines\Tests\Semver\Expressions;
 
 use Omines\Semver\Expression;
 use Omines\Semver\Expressions\PrimitiveGenerator;
@@ -91,7 +91,7 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
 
     public function expressionDataProvider()
     {
-        $data = json_decode(file_get_contents(__DIR__ . '/Data/Expressions/ExpressionMatches.json'), JSON_OBJECT_AS_ARRAY);
+        $data = json_decode(file_get_contents(FIXTURES_PATH . '/Expressions/ExpressionMatches.json'), JSON_OBJECT_AS_ARRAY);
         foreach ($data as $expression => $tests) {
             foreach ($tests as $type => $versions) {
                 foreach ($versions as $version) {
@@ -115,7 +115,7 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
 
     public function normalizedExpressionDataProvider()
     {
-        $data = json_decode(file_get_contents(__DIR__ . '/Data/Expressions/NormalizedExpressions.json'), JSON_OBJECT_AS_ARRAY);
+        $data = json_decode(file_get_contents(FIXTURES_PATH . '/Expressions/NormalizedExpressions.json'), JSON_OBJECT_AS_ARRAY);
         foreach ($data as $key => $value) {
             yield $value => [$key, $value];
         }

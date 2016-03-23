@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Tests;
+namespace Omines\Tests\Semver;
 
 use Omines\Semver\Expressions\ExpressionParser;
 use Omines\Semver\Version\VersionParser;
@@ -36,7 +36,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function dataProvider()
     {
-        foreach (json_decode(file_get_contents(__DIR__ . '/Data/Semver2/ParserTest.json'), JSON_OBJECT_AS_ARRAY) as $key => $value) {
+        foreach (json_decode(file_get_contents(FIXTURES_PATH . '/Semver2/ParserTest.json'), JSON_OBJECT_AS_ARRAY) as $key => $value) {
             yield $key => [$key, $value];
         }
     }
@@ -48,7 +48,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         foreach (['1', '1.0', '1.0.0', '1-alpha.1', '1+build.2', '1-rc.3+build.3'] as $sample) {
             $output[$sample] = VersionParser::parseSemver2($sample);
         }
-        file_put_contents(__DIR__ . '/Data/ParserTestData.json', json_encode($output, JSON_PRETTY_PRINT));
+        file_put_contents(FIXTURES_PATH . '/ParserTestData.json', json_encode($output, JSON_PRETTY_PRINT));
     }
 
     /**

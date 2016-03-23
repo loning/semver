@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Tests\Version;
+namespace Omines\Tests\Semver\Version;
 
 use Omines\Semver\Version\IdentifierSegment;
 use Omines\Semver\Version\NumbersSegment;

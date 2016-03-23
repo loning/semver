@@ -8,9 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Tests;
+namespace Omines\Tests\Semver\Expressions;
 
 use Omines\Semver\Expressions\Primitive;
+use Omines\Semver\Version;
 
 /**
  * PrimitiveTest
@@ -26,6 +27,6 @@ class PrimitiveTest extends \PHPUnit_Framework_TestCase
     public function testInvalidOperatorThrows()
     {
         $primitive = new Primitive('1.0.0', 'invalid');
-        $primitive->matches('1.2.0');
+        $primitive->matches(Version::fromString('1.2.0'));
     }
 }

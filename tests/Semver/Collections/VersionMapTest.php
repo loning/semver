@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Omines\Semver\Tests;
+namespace Omines\Tests\Semver\Collections;
 
 use Omines\Semver\Collections\VersionMap;
 
