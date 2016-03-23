@@ -17,7 +17,12 @@ use Omines\Semver\Version;
  * VersionListTest.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
+ * @covers Omines\Semver\Collections\AbstractVersionCollection
+ * @covers Omines\Semver\Collections\AbstractVersionIterator
+ * @covers Omines\Semver\Collections\VersionList
+ * @covers Omines\Semver\Collections\VersionListIterator
  */
+
 class VersionListTest extends \PHPUnit_Framework_TestCase
 {
     private $sorted;

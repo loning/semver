@@ -16,6 +16,10 @@ use Omines\Semver\Collections\VersionMap;
  * SemverMapTest.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
+ * @covers Omines\Semver\Collections\AbstractVersionCollection
+ * @covers Omines\Semver\Collections\AbstractVersionIterator
+ * @covers Omines\Semver\Collections\VersionMap
+ * @covers Omines\Semver\Collections\VersionMapIterator
  */
 class VersionMapTest extends \PHPUnit_Framework_TestCase
 {
