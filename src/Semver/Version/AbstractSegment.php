@@ -37,19 +37,15 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
      */
     public function compare(AbstractSegment $that)
     {
-        $thoseElements = count($that);
-        $theseElements = count($this);
+        $thoseElements = count($that->elements);
+        $theseElements = count($this->elements);
         if (!$thoseElements || !$theseElements) {
-            return $thoseElements - $theseElements;
-        } elseif ($thoseElements > $theseElements) {
+            return count($that->elements) - count($this->elements);
+        } elseif($thoseElements > $theseElements) {
             return -$that->compare($this);
         }
-
-        $multi = new \MultipleIterator(\MultipleIterator::MIT_NEED_ANY);
-        $multi->attachIterator(new \ArrayIterator($this->elements));
-        $multi->attachIterator(new \ArrayIterator($that->elements));
-        foreach ($multi as $item) {
-            if ($result = $this->compareElements($item[0], $item[1])) {
+        for ($idx = 0; $idx < $theseElements; ++$idx) {
+            if ($result = $this->compareElements($this[$idx], $that[$idx])) {
                 return $result;
             }
         }
