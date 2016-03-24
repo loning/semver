@@ -25,7 +25,7 @@ class VersionParser
     const BUILD = 'build';
     const COMPLIANCE = 'compliance';
 
-    const REGEX_SEMVER2 = '#^[=v\s]*([\d\.]+)(\-([a-z0-9\.\-]+))?(\+([a-z0-9\.]+))?\s*$#i';
+    const REGEX_SEMVER2 = '#^\s*=?v?([\d\.]+)(\-([a-z0-9\.\-]+))?(\+([a-z0-9\.]+))?\s*$#i';
 
     /**
      * @param string $version

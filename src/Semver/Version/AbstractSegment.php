@@ -41,7 +41,7 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
         $theseElements = count($this->elements);
         if (!$thoseElements || !$theseElements) {
             return count($that->elements) - count($this->elements);
-        } elseif($thoseElements > $theseElements) {
+        } elseif ($thoseElements > $theseElements) {
             return -$that->compare($this);
         }
         foreach ($this->elements as $key => $value) {
