@@ -44,8 +44,8 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
         } elseif($thoseElements > $theseElements) {
             return -$that->compare($this);
         }
-        for ($idx = 0; $idx < $theseElements; ++$idx) {
-            if ($result = $this->compareElements($this[$idx], $that[$idx])) {
+        foreach ($this->elements as $key => $value) {
+            if ($result = $this->compareElements($value, $that[$key])) {
                 return $result;
             }
         }

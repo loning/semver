@@ -107,7 +107,7 @@ class VersionList extends AbstractVersionCollection
      */
     public function offsetUnset($offset)
     {
-        unset($this->data[$offset]);
+        array_splice($this->data, $offset, 1);
     }
 
     /**

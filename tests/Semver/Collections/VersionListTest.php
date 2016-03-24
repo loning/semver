@@ -83,7 +83,6 @@ class VersionListTest extends \PHPUnit_Framework_TestCase
         $sampleKey = (int) (count($this->sorted) / 2);
         $this->assertTrue(isset($list[$sampleKey]));
         unset($list[$sampleKey]);
-        $this->assertFalse(isset($list[$sampleKey]));
         $this->assertEquals(count($this->sorted) - 1, count($list));
 
         $before = $list->getStringValues();
