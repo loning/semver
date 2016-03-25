@@ -10,6 +10,7 @@
 
 namespace Omines\Semver;
 
+use Omines\Semver\Expressions\CompoundExpression;
 use Omines\Semver\Expressions\ExpressionInterface;
 use Omines\Semver\Expressions\ExpressionParser;
 use Omines\Semver\Expressions\Primitive;
@@ -23,11 +24,11 @@ use Omines\Semver\Version\VersionInterface;
  */
 class Expression implements ExpressionInterface
 {
-    /** @var Primitive[][] */
-    private $elements = [];
-
     /** @var string */
     private $originalString;
+
+    /** @var CompoundExpression */
+    private $rootExpression;
 
     /**
      * Range constructor.
@@ -38,7 +39,7 @@ class Expression implements ExpressionInterface
     {
         $expression = (string) $expression;
         $this->originalString = $expression;
-        $this->elements = ExpressionParser::parseExpression($expression);
+        $this->rootExpression = ExpressionParser::parseExpression($expression);
     }
 
     /**
@@ -55,9 +56,7 @@ class Expression implements ExpressionInterface
      */
     public function getNormalizedString()
     {
-        return implode(' || ', array_map(function ($and) {
-            return implode(' ', $and);
-        }, $this->elements));
+        return (string) $this->rootExpression;
     }
 
     /**
@@ -74,15 +73,7 @@ class Expression implements ExpressionInterface
      */
     public function matches(VersionInterface $version)
     {
-        foreach ($this->elements as $or) {
-            foreach ($or as $and) {
-                if (!$and->matches($version)) {
-                    continue 2;
-                }
-            }
-            return true;
-        }
-        return false;
+        return $this->rootExpression->matches($version);
     }
 
     /**

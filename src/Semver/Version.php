@@ -14,6 +14,7 @@ use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Expressions\ExpressionInterface;
 use Omines\Semver\Version\IdentifierSegment;
 use Omines\Semver\Version\NumbersSegment;
+use Omines\Semver\Version\PrereleaseSegment;
 use Omines\Semver\Version\VersionInterface;
 use Omines\Semver\Version\VersionParser;
 
@@ -34,7 +35,7 @@ class Version implements VersionInterface
     /** @var NumbersSegment */
     private $version;
 
-    /** @var IdentifierSegment */
+    /** @var PrereleaseSegment */
     private $prerelease;
 
     /** @var IdentifierSegment */
@@ -66,7 +67,7 @@ class Version implements VersionInterface
         }
 
         $this->version = new NumbersSegment($parsed[VersionParser::VERSION]);
-        $this->prerelease = new IdentifierSegment($parsed[VersionParser::PRERELEASE]);
+        $this->prerelease = new PrereleaseSegment($parsed[VersionParser::PRERELEASE]);
         $this->build = new IdentifierSegment($parsed[VersionParser::BUILD]);
     }
 

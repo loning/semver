@@ -29,35 +29,33 @@ class ExpressionParser
 
     /**
      * @param string $expression
-     * @return Primitive[][] Disjunctive collection of conjunctive collections of primitives.
+     * @return CompoundExpression
      */
     public static function parseExpression($expression)
     {
         // Split disjunctive elements
-        $elements = preg_split(self::REGEX_SPLIT_RANGESET, trim($expression));
-        foreach ($elements as &$element) {
-            $element = self::parseSubexpression($element);
+        $result = new CompoundExpression(CompoundExpression::DISJUNCTIVE);
+        foreach (preg_split(self::REGEX_SPLIT_RANGESET, trim($expression)) as $element) {
+            $result->add(self::parseConjunctiveExpression($element));
         }
-        return $elements;
+        return $result;
     }
 
     /**
      * @param string $expression
-     * @return Primitive[] Collection of primitives matching the expression.
+     * @return CompoundExpression
      */
-    public static function parseSubexpression($expression)
+    public static function parseConjunctiveExpression($expression)
     {
-        // Detect hyphen
+        $result = new CompoundExpression(CompoundExpression::CONJUNCTIVE);
         if (preg_match(self::REGEX_HYPHEN, $expression, $parts)) {
-            return self::parseHyphen($parts[1], $parts[2]);
+            $result->addMultiple(self::parseHyphen($parts[1], $parts[2]));
+        } else {
+            foreach (preg_split('/\s+/', $expression) as $simple) {
+                $result->addMultiple(self::parseSimpleExpression($simple));
+            }
         }
-
-        // Split regular simple constraints
-        $primitives = [];
-        foreach (preg_split('/\s+/', $expression) as $simple) {
-            $primitives = array_merge($primitives, self::parseSimpleExpression($simple));
-        }
-        return $primitives;
+        return $result;
     }
 
     /**
