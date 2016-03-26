@@ -13,7 +13,6 @@ namespace Omines\Semver;
 use Omines\Semver\Expressions\CompoundExpression;
 use Omines\Semver\Expressions\ExpressionInterface;
 use Omines\Semver\Expressions\ExpressionParser;
-use Omines\Semver\Expressions\Primitive;
 use Omines\Semver\Version;
 use Omines\Semver\Version\VersionInterface;
 
