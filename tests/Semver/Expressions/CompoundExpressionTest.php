@@ -19,6 +19,7 @@ use Omines\Semver\Version;
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  * @covers Omines\Semver\Expressions\CompoundExpression
+ * @covers Omines\Semver\Expressions\PrimitiveGenerator
  */
 class CompoundExpressionTest extends \PHPUnit_Framework_TestCase
 {
