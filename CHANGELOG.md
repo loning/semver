@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.1] - 2016-04-05
+### Changed
+- Various bug fixes and refactorings
+
 ## [0.2.0] - 2016-03-21
 ### Added
 - Increment functionality on Version
@@ -22,5 +26,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - VersionList encapsulation of a regular array with Semver values
 - Range implementation with all common operators
 
-[Unreleased]: https://github.com/omines/semver/compare/0.2.0...master
+[Unreleased]: https://github.com/omines/semver/compare/0.2.1...master
+[0.2.1]: https://github.com/omines/semver/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/omines/semver/compare/0.1.0...0.2.0
