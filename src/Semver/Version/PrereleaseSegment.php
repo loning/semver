@@ -17,4 +17,5 @@ namespace Omines\Semver\Version;
  */
 class PrereleaseSegment extends IdentifierSegment
 {
+
 }
