@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -44,13 +44,13 @@ class VersionMap extends AbstractVersionCollection
     }
 
     /**
-     * @param callable $callable Callback that will be invoked with ($data, $version) parameters.
+     * @param callable $callable callback that will be invoked with ($data, $version) parameters
      */
     public function each(callable $callable)
     {
         foreach ($this as $version => $data) {
             $callable($data, $version);
-        };
+        }
     }
 
     /**

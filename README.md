@@ -10,7 +10,7 @@ Semantic Versioning implementation for PHP including constraints, filters, sorti
 specification [2.0.0](http://semver.org/spec/v2.0.0.html) but also support loose parsing of non-compliant but similar versioning systems.
 
 All core features like the parsing and processing of versions and expressions are implemented and 100% unit tested, but the
-library is not yet feature complete and still under active development. Visit the [open issues](https://github.com/omines/semver/issues)
+library is not yet feature complete. Active development is currently on hold. Visit the [open issues](https://github.com/omines/semver/issues)
 to see what's on the list before going 1.0.0.
 
 ## Installation

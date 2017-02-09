@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,7 +11,7 @@
 namespace Omines\Semver\Version;
 
 /**
- * AbstractSegment
+ * AbstractSegment.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
@@ -33,7 +33,7 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
 
     /**
      * @param AbstractSegment $that
-     * @return integer|double Negative is this is smaller, positive if that is smaller, or 0 if equals.
+     * @return int|float negative if this is smaller, positive if that is smaller, or 0 if equals
      */
     public function compare(AbstractSegment $that)
     {
@@ -77,7 +77,7 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function count()
     {
@@ -85,7 +85,7 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function offsetExists($offset)
     {
@@ -93,7 +93,7 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function offsetGet($offset)
     {
@@ -101,7 +101,7 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function offsetSet($offset, $value)
     {
@@ -114,7 +114,7 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function offsetUnset($offset)
     {
@@ -132,7 +132,7 @@ abstract class AbstractSegment implements \ArrayAccess, \Countable
     /**
      * @param mixed $first
      * @param mixed $second
-     * @return int|double
+     * @return int|float
      */
     abstract protected function compareElements($first, $second);
 

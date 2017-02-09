@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,7 +14,7 @@ use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Version;
 
 /**
- * VersionParser
+ * VersionParser.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
@@ -51,7 +51,7 @@ class VersionParser
 
     /**
      * @param string $version
-     * @return array<string,array|string> Array of arrays containing the separate sections.
+     * @return array<string,array|string> array of arrays containing the separate sections
      */
     public static function parseSemver2($version)
     {
@@ -102,7 +102,6 @@ class VersionParser
                 }
             } else {
                 $pre[] = $element;
-
             }
         }
         if (empty($numbers)) {

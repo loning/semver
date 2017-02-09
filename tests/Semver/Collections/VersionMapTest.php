@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,12 +16,12 @@ use Omines\Semver\Collections\VersionMap;
  * SemverMapTest.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
- * @covers Omines\Semver\Collections\AbstractVersionCollection
- * @covers Omines\Semver\Collections\AbstractVersionIterator
- * @covers Omines\Semver\Collections\VersionMap
- * @covers Omines\Semver\Collections\VersionMapIterator
+ * @covers \Omines\Semver\Collections\AbstractVersionCollection
+ * @covers \Omines\Semver\Collections\AbstractVersionIterator
+ * @covers \Omines\Semver\Collections\VersionMap
+ * @covers \Omines\Semver\Collections\VersionMapIterator
  */
-class VersionMapTest extends \PHPUnit_Framework_TestCase
+class VersionMapTest extends \PHPUnit\Framework\TestCase
 {
     private static $sampleVersions = [
         '1.2',

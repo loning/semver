@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Switched to PHPUnit 5/6
+- Dropped support for PHP 5.5
 
 ## [0.2.1] - 2016-04-05
 ### Changed

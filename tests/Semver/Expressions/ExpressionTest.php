@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,11 +15,11 @@ use Omines\Semver\Expressions\PrimitiveGenerator;
 use Omines\Semver\Version;
 
 /**
- * ExpressionTest
+ * ExpressionTest.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
-class ExpressionTest extends \PHPUnit_Framework_TestCase
+class ExpressionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider variousRangesProvider
@@ -64,7 +64,9 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
             '^1.2 | ~2.3 | ~3.4 | ^4.5',
             '^1.2 | ~2.3 | 3.4 - 3.5 | ^4.5',
         ];
-        return array_combine($expressions, array_map(function ($item) { return [$item]; }, $expressions));
+        return array_combine($expressions, array_map(function ($item) {
+            return [$item];
+        }, $expressions));
     }
 
     /**
@@ -86,6 +88,8 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
                 break;
             default:
                 // TODO: Implement lt/gt
+                $this->markTestSkipped('Expressions with GT/LT are not being tested right now');
+                break;
         }
     }
 

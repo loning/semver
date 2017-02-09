@@ -1,31 +1,33 @@
 <?php
 
-Symfony\CS\Fixer\Contrib\HeaderCommentFixer::setHeader(<<<EOF
+$header = <<<EOF
 Semver
-(c) Omines Internetbureau B.V. - www.omines.nl
+(c) Omines Internetbureau B.V. - https://omines.nl/
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-EOF
-);
+EOF;
 
-return Symfony\CS\Config::create()
-    ->level(Symfony\CS\FixerInterface::PSR2_LEVEL)
-    ->fixers([
-        'newline_after_open_tag',
-        'single_blank_line_before_namespace',
-        '-return',
-        'concat_with_spaces',
-        'short_array_syntax',
-        'strict_param',
-        'header_comment'
-    ])
-    ->finder(
-        Symfony\CS\Finder::create()
-            ->files()
-            ->name('*.php')
-            ->exclude('Data')
-            ->in(__DIR__.'/src')
-            ->in(__DIR__.'/tests')
-    )
+$finder = PhpCsFixer\Finder::create()
+    ->files()
+    ->name('*.php')
+    ->exclude('Data')
+    ->in(__DIR__.'/src')
+    ->in(__DIR__.'/tests')
 ;
+
+return PhpCsFixer\Config::create()
+    ->setRiskyAllowed(true)
+    ->setRules([
+        '@Symfony' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'concat_space' => ['spacing' => 'one'],
+        'header_comment' => ['header' => $header],
+
+        'blank_line_before_return' => false,
+        'phpdoc_align' => false,
+        'phpdoc_separation' => false,
+        'phpdoc_var_without_name' => false,
+    ])
+    ->setFinder($finder)
+    ;

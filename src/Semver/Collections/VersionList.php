@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -47,7 +47,7 @@ class VersionList extends AbstractVersionCollection
     {
         foreach ($this as $version) {
             $callable($version);
-        };
+        }
     }
 
     /**
@@ -59,7 +59,7 @@ class VersionList extends AbstractVersionCollection
     }
 
     /**
-     * @return string[] A standard PHP array of normalized versions.
+     * @return string[] a standard PHP array of normalized versions
      */
     public function getStringValues()
     {
@@ -67,7 +67,7 @@ class VersionList extends AbstractVersionCollection
     }
 
     /**
-     * @return Version[] A standard PHP array of versions.
+     * @return Version[] a standard PHP array of versions
      */
     public function getValues()
     {

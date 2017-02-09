@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,7 +13,6 @@ namespace Omines\Semver;
 use Omines\Semver\Expressions\CompoundExpression;
 use Omines\Semver\Expressions\ExpressionInterface;
 use Omines\Semver\Expressions\ExpressionParser;
-use Omines\Semver\Version;
 use Omines\Semver\Version\VersionInterface;
 
 /**
@@ -68,7 +67,7 @@ class Expression implements ExpressionInterface
 
     /**
      * @param VersionInterface $version
-     * @return bool Whether the version is matches by this expression.
+     * @return bool whether the version is matches by this expression
      */
     public function matches(VersionInterface $version)
     {

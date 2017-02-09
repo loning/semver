@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,7 +17,7 @@ use Omines\Semver\Version;
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
-class VersionTest extends \PHPUnit_Framework_TestCase
+class VersionTest extends \PHPUnit\Framework\TestCase
 {
     public function testValidCompleteSemverHandling()
     {
@@ -126,7 +126,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLooseParsingFailCompliance()
     {
-        Version::fromString("1.9.final", Version::COMPLIANCE_SEMVER2);
+        Version::fromString('1.9.final', Version::COMPLIANCE_SEMVER2);
     }
 
     /**
@@ -135,9 +135,8 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLooseParsingFailMalformed()
     {
-        Version::fromString("final", Version::COMPLIANCE_NONE);
+        Version::fromString('final', Version::COMPLIANCE_NONE);
     }
-
 
     /**
      * @dataProvider looseVersionsProvider

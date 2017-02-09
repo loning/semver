@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,7 +13,7 @@ namespace Omines\Semver\Version;
 use Omines\Semver\Expressions\ExpressionInterface;
 
 /**
- * VersionInterface
+ * VersionInterface.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
@@ -22,34 +22,34 @@ interface VersionInterface
     /**
      * @return AbstractSegment
      */
-    function getPrerelease();
+    public function getPrerelease();
 
     /**
      * @return NumbersSegment
      */
-    function getVersion();
+    public function getVersion();
 
     /**
      * @param ExpressionInterface $expression
      * @return bool
      */
-    function matches(ExpressionInterface $expression);
+    public function matches(ExpressionInterface $expression);
 
     /**
      * @param VersionInterface $version
      * @return bool
      */
-    function equals(VersionInterface $version);
+    public function equals(VersionInterface $version);
 
     /**
      * @param VersionInterface $version
      * @return bool
      */
-    function greaterThan(VersionInterface $version);
+    public function greaterThan(VersionInterface $version);
 
     /**
      * @param VersionInterface $version
      * @return bool
      */
-    function lessThan(VersionInterface $version);
+    public function lessThan(VersionInterface $version);
 }

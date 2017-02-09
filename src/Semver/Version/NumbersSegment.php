@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,14 +13,14 @@ namespace Omines\Semver\Version;
 use Omines\Semver\Exception\SemverException;
 
 /**
- * NumbersSegment
+ * NumbersSegment.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
 class NumbersSegment extends AbstractSegment
 {
     /**
-     * @param int $index Index to increment, all subsequent numbers will be reset.
+     * @param int $index index to increment, all subsequent numbers will be reset
      */
     public function increment($index)
     {
@@ -45,7 +45,7 @@ class NumbersSegment extends AbstractSegment
     /**
      * @param int $first
      * @param int $second
-     * @return int|double
+     * @return int|float
      */
     protected function compareElements($first, $second)
     {

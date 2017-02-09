@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,7 +14,7 @@ use Omines\Semver\Exception\SemverException;
 use Omines\Semver\Version;
 
 /**
- * PrimitiveGenerator
+ * PrimitiveGenerator.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
  */
@@ -112,7 +112,7 @@ class PrimitiveGenerator
     /**
      * @param Version|string $lower
      * @param Version|string $upper
-     * @return Primitive[] Two primitives marking the non-inclusive range.
+     * @return Primitive[] two primitives marking the non-inclusive range
      */
     private function between($lower, $upper)
     {

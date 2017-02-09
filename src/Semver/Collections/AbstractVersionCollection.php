@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,12 +32,11 @@ abstract class AbstractVersionCollection implements \ArrayAccess, \Countable, \I
 
     /**
      * @param callable $callable
-     * @return void
      */
     abstract public function each(callable $callable);
 
     /**
-     * @return Version[] A standard PHP array of versions.
+     * @return Version[] a standard PHP array of versions
      */
     protected function getVersionArray()
     {
@@ -47,7 +46,7 @@ abstract class AbstractVersionCollection implements \ArrayAccess, \Countable, \I
     }
 
     /**
-     * @return string[] A standard PHP array of normalized versions.
+     * @return string[] a standard PHP array of normalized versions
      */
     protected function getVersionStringArray()
     {

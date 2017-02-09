@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,13 +15,13 @@ use Omines\Semver\Expressions\Primitive;
 use Omines\Semver\Version;
 
 /**
- * CompoundExpressionTest
+ * CompoundExpressionTest.
  *
  * @author Niels Keurentjes <niels.keurentjes@omines.com>
- * @covers Omines\Semver\Expressions\CompoundExpression
- * @covers Omines\Semver\Expressions\PrimitiveGenerator
+ * @covers \Omines\Semver\Expressions\CompoundExpression
+ * @covers \Omines\Semver\Expressions\PrimitiveGenerator
  */
-class CompoundExpressionTest extends \PHPUnit_Framework_TestCase
+class CompoundExpressionTest extends \PHPUnit\Framework\TestCase
 {
     public function testCompoundExpression()
     {

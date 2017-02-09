@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -111,7 +111,7 @@ class Version implements VersionInterface
 
     /**
      * @param mixed[] $versions
-     * @param callable $selector Returns true to select the first parameter, false for the second.
+     * @param callable $selector returns true to select the first parameter, false for the second
      * @return Version
      */
     private static function reduce(array $versions, callable $selector)
@@ -125,8 +125,8 @@ class Version implements VersionInterface
     }
 
     /**
-     * @param VersionInterface $that Version to compare to.
-     * @return integer|double Negative is this is smaller, positive if that is smaller, or 0 if equals.
+     * @param VersionInterface $that version to compare to
+     * @return int|float negative is this is smaller, positive if that is smaller, or 0 if equals
      */
     public function compare(VersionInterface $that)
     {

@@ -2,7 +2,7 @@
 
 /*
  * Semver
- * (c) Omines Internetbureau B.V. - www.omines.nl
+ * (c) Omines Internetbureau B.V. - https://omines.nl/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -45,7 +45,7 @@ class Primitive implements ExpressionInterface
     /** @var string */
     private $operator;
 
-    /** @var bool  */
+    /** @var bool */
     private $negate;
 
     /**
@@ -67,7 +67,7 @@ class Primitive implements ExpressionInterface
     }
 
     /**
-     * @return Primitive A primitive matching all versions.
+     * @return Primitive a primitive matching all versions
      */
     public static function getWildcard()
     {
