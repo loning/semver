@@ -9,7 +9,8 @@ matrix:
     - php: 7.1
     - php: 7.1
       env: COMPOSER_FLAGS="--prefer-lowest"
-    - php: hhvm
+    - php: hhvm-3.9
+      dist: trusty
     - php: nightly
 
   fast_finish: true
